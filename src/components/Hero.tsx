@@ -13,19 +13,25 @@ export default function Hero() {
         }}
       />
 
-      {/* Asuka full background — fades in from left */}
+      {/* Asuka full background — positioned right, no mask (mask-image has CDN compat issues) */}
       <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: 'url(/asuka-bg.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'right center',
-          backgroundRepeat: 'no-repeat',
-          opacity: 0.18,
-          maskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,1) 35%, rgba(0,0,0,1) 100%)',
-          WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,1) 35%, rgba(0,0,0,1) 100%)',
-        }}
-      />
+        className="absolute inset-0 pointer-events-none overflow-hidden"
+      >
+        <div
+          style={{
+            backgroundImage: 'url(/asuka-bg.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'right center',
+            backgroundRepeat: 'no-repeat',
+            opacity: 0.15,
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            right: '-10%',
+            left: '30%',
+          }}
+        />
+      </div>
 
       <div className="animate-fadeInUp relative z-10">
         <p className="text-blue-400 font-mono text-sm mb-4 tracking-widest uppercase">
