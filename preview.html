@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>个人主页 | AI 应用开发方向</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue: #2563eb;
+      --blue-light: #60a5fa;
+      --blue-dark: #1d4ed8;
+      --violet: #7c3aed;
+      --cyan: #0891b2;
+      --emerald: #059669;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-400: #94a3b8;
+      --slate-500: #64748b;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+    }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--slate-900);
+      color: var(--slate-200);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+      margin: 0;
+    }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--slate-800); }
+    ::-webkit-scrollbar-thumb { background: var(--slate-600); border-radius: 3px; }
+
+    /* ── NAVBAR ─────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+      transition: all .3s;
+    }
+    nav.scrolled {
+      background: rgba(15,23,42,.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--slate-800);
+      box-shadow: 0 4px 20px rgba(0,0,0,.3);
+    }
+    .nav-brand {
+      color: var(--blue-light);
+      font-weight: 600;
+      font-size: 1.05rem;
+      text-decoration: none;
+      font-family: monospace;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--slate-400);
+      text-decoration: none;
+      font-size: .875rem;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: white; }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; color: var(--slate-400); }
+    .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 40; }
+
+    /* ── SECTION BASE ───────────────────────────── */
+    section { padding: 6rem 2rem; }
+    section[id] { scroll-margin-top: 72px; }
+    .container { max-width: 960px; margin: 0 auto; }
+    .section-label {
+      color: var(--blue-light);
+      font-family: monospace;
+      font-size: .8rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: .5rem;
+    }
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 2.25rem);
+      font-weight: 700;
+      color: white;
+      margin-bottom: .75rem;
+    }
+    .title-bar {
+      width: 3.5rem; height: 3px;
+      background: var(--blue);
+      border-radius: 2px;
+      margin-bottom: 3rem;
+    }
+
+    /* ── HERO ───────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(circle at 20% 40%, rgba(37,99,235,.13) 0%, transparent 55%),
+        radial-gradient(circle at 80% 60%, rgba(124,58,237,.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    /* Asuka full background layer — fades in from left */
+    #hero::after {
+      content: '';
+      position: absolute; inset: 0; z-index: 0;
+      background: url(public/asuka-bg.png) center/cover no-repeat;
+      opacity: 0.15;
+      mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,1) 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,1) 100%);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; }
+    .hero-text { min-width: 0; }
+    .hero-eyebrow {
+      font-family: monospace;
+      font-size: .8rem;
+      color: var(--blue-light);
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+    .hero-title {
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      color: white;
+      margin-bottom: 1.25rem;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      color: var(--slate-400);
+      font-size: 1.05rem;
+      max-width: 680px;
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+    }
+    .hero-sub .accent { color: #93c5fd; font-weight: 500; }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2.5rem; }
+    .btn-primary {
+      padding: .75rem 1.5rem;
+      background: var(--blue);
+      color: white;
+      text-decoration: none;
+      border-radius: .5rem;
+      font-weight: 600;
+      font-size: .9rem;
+      transition: all .2s;
+      box-shadow: 0 4px 15px rgba(37,99,235,.3);
+    }
+    .btn-primary:hover { background: #3b82f6; box-shadow: 0 6px 20px rgba(37,99,235,.4); }
+    .btn-secondary {
+      padding: .75rem 1.5rem;
+      border: 1px solid var(--slate-600);
+      color: var(--slate-300);
+      text-decoration: none;
+      border-radius: .5rem;
+      font-weight: 500;
+      font-size: .9rem;
+      transition: all .2s;
+    }
+    .btn-secondary:hover { border-color: var(--slate-400); color: white; }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .hero-tag {
+      font-family: monospace;
+      font-size: .75rem;
+      padding: .3rem .75rem;
+      background: var(--slate-800);
+      color: var(--slate-400);
+      border: 1px solid var(--slate-700);
+      border-radius: 9999px;
+    }
+    .scroll-arrow {
+      position: absolute;
+      bottom: 2.5rem; left: 50%;
+      transform: translateX(-50%);
+      color: var(--slate-700);
+      animation: bounce 1.5s infinite;
+    }
+    @keyframes bounce {
+      0%,100%{transform:translateX(-50%) translateY(0)}
+      50%{transform:translateX(-50%) translateY(6px)}
+    }
+
+    /* ── ABOUT ──────────────────────────────────── */
+    #about { background: transparent; }
+    .about-grid { display: grid; gap: 3rem; grid-template-columns: 1fr 1fr; align-items: start; }
+    .about-text p { color: var(--slate-300); margin-bottom: 1.1rem; line-height: 1.8; font-size: .97rem; }
+    .about-text .accent { color: #93c5fd; font-weight: 500; }
+    .highlight-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .hl-card {
+      background: rgba(30,41,59,.6);
+      border: 1px solid var(--slate-700);
+      border-radius: .875rem;
+      padding: 1.25rem;
+      transition: border-color .2s;
+    }
+    .hl-card:hover { border-color: #3b82f6; }
+    .hl-icon { font-size: 1.5rem; margin-bottom: .5rem; }
+    .hl-title { color: white; font-weight: 600; font-size: .875rem; margin-bottom: .35rem; }
+    .hl-desc { color: var(--slate-400); font-size: .8rem; line-height: 1.6; }
+
+    /* ── SKILLS ─────────────────────────────────── */
+    #skills { background: rgba(15,23,42,.5); }
+    .skills-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    .skill-group {
+      background: rgba(30,41,59,.5);
+      border: 1px solid var(--slate-700);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: border-color .2s;
+    }
+    .skill-group:hover { border-color: var(--slate-600); }
+    .skill-header { display: flex; align-items: center; gap: .5rem; margin-bottom: 1rem; }
+    .skill-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .skill-cat-name { font-weight: 600; font-size: .85rem; }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .skill-tag {
+      font-family: monospace;
+      font-size: .75rem;
+      padding: .25rem .6rem;
+      border-radius: .35rem;
+      border: 1px solid;
+    }
+    /* Color variants */
+    .c-blue .skill-dot { background: #3b82f6; }
+    .c-blue .skill-cat-name { color: #60a5fa; }
+    .c-blue .skill-tag { background: rgba(37,99,235,.18); color: #93c5fd; border-color: rgba(59,130,246,.35); }
+    .c-violet .skill-dot { background: #8b5cf6; }
+    .c-violet .skill-cat-name { color: #a78bfa; }
+    .c-violet .skill-tag { background: rgba(124,58,237,.18); color: #c4b5fd; border-color: rgba(139,92,246,.35); }
+    .c-cyan .skill-dot { background: #06b6d4; }
+    .c-cyan .skill-cat-name { color: #67e8f9; }
+    .c-cyan .skill-tag { background: rgba(8,145,178,.18); color: #a5f3fc; border-color: rgba(6,182,212,.35); }
+    .c-emerald .skill-dot { background: #10b981; }
+    .c-emerald .skill-cat-name { color: #6ee7b7; }
+    .c-emerald .skill-tag { background: rgba(5,150,105,.18); color: #a7f3d0; border-color: rgba(16,185,129,.35); }
+
+    /* ── WORK ───────────────────────────────────── */
+    #work { background: transparent; }
+    .work-sub { color: var(--slate-400); font-size: .875rem; margin-bottom: 3rem; max-width: 480px; }
+    .work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .work-card {
+      display: flex; flex-direction: column;
+      background: rgba(30,41,59,.5);
+      border: 1px solid var(--slate-700);
+      border-radius: 1.125rem;
+      padding: 1.5rem;
+      transition: all .2s;
+    }
+    .work-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,.3); }
+    .work-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+    .work-icon {
+      width: 3rem; height: 3rem;
+      border-radius: .75rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+    }
+    .work-badge {
+      font-family: monospace;
+      font-size: .7rem;
+      padding: .2rem .55rem;
+      border-radius: .3rem;
+      border: 1px solid;
+    }
+    .work-title { color: white; font-weight: 700; font-size: 1.05rem; margin-bottom: .2rem; line-height: 1.35; }
+    .work-subtitle { color: var(--slate-500); font-size: .78rem; margin-bottom: .75rem; font-weight: 500; }
+    .work-desc { color: var(--slate-400); font-size: .83rem; line-height: 1.7; flex: 1; }
+    .work-tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: 1.25rem; }
+    .work-tag { font-family: monospace; font-size: .72rem; padding: .2rem .5rem; border-radius: .3rem; border: 1px solid; }
+    /* card color variants */
+    .wc-blue { border-color: var(--slate-700); }
+    .wc-blue:hover { border-color: rgba(37,99,235,.5); }
+    .wc-blue .work-icon { background: rgba(37,99,235,.18); }
+    .wc-blue .work-badge { color: #60a5fa; background: rgba(37,99,235,.2); border-color: rgba(59,130,246,.35); }
+    .wc-blue .work-tag { background: rgba(37,99,235,.18); color: #93c5fd; border-color: rgba(59,130,246,.3); }
+    .wc-violet:hover { border-color: rgba(124,58,237,.5); }
+    .wc-violet .work-icon { background: rgba(124,58,237,.18); }
+    .wc-violet .work-badge { color: #a78bfa; background: rgba(124,58,237,.2); border-color: rgba(139,92,246,.35); }
+    .wc-violet .work-tag { background: rgba(124,58,237,.18); color: #c4b5fd; border-color: rgba(139,92,246,.3); }
+    .wc-cyan:hover { border-color: rgba(8,145,178,.5); }
+    .wc-cyan .work-icon { background: rgba(8,145,178,.18); }
+    .wc-cyan .work-badge { color: #67e8f9; background: rgba(8,145,178,.2); border-color: rgba(6,182,212,.35); }
+    .wc-cyan .work-tag { background: rgba(8,145,178,.18); color: #a5f3fc; border-color: rgba(6,182,212,.3); }
+
+    /* ── NOTES ──────────────────────────────────── */
+    #notes { background: rgba(15,23,42,.5); }
+    .notes-sub { color: var(--slate-400); font-size: .875rem; margin-bottom: 3rem; max-width: 480px; }
+    .notes-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+    .note-card {
+      background: rgba(30,41,59,.5);
+      border: 1px solid var(--slate-700);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: border-color .2s;
+    }
+    .note-card:hover { border-color: var(--slate-600); }
+    .note-header { display: flex; align-items: center; gap: .75rem; margin-bottom: .75rem; }
+    .note-icon { font-size: 1.4rem; }
+    .note-title { color: white; font-weight: 600; font-size: .95rem; }
+    .note-desc { color: var(--slate-400); font-size: .83rem; line-height: 1.7; margin-bottom: 1rem; }
+    .note-tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+    .note-tag {
+      font-family: monospace;
+      font-size: .72rem;
+      padding: .2rem .5rem;
+      border-radius: .3rem;
+      background: rgba(30,41,59,.8);
+      color: var(--slate-400);
+      border: 1px solid var(--slate-700);
+    }
+
+    /* ── CONTACT ────────────────────────────────── */
+    #contact { background: transparent; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+    .contact-text p { color: var(--slate-300); line-height: 1.8; font-size: .95rem; margin-bottom: 1rem; }
+    .contact-text .muted { color: var(--slate-500); font-size: .85rem; margin-bottom: 2rem; }
+    .btn-download {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .75rem 1.5rem;
+      background: var(--blue);
+      color: white;
+      text-decoration: none;
+      border-radius: .5rem;
+      font-weight: 600;
+      font-size: .9rem;
+      transition: all .2s;
+      box-shadow: 0 4px 15px rgba(37,99,235,.3);
+    }
+    .btn-download:hover { background: #3b82f6; }
+    .contact-cards { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-card {
+      display: flex; align-items: center; gap: 1rem;
+      background: rgba(30,41,59,.5);
+      border: 1px solid var(--slate-700);
+      border-radius: .875rem;
+      padding: 1rem 1.25rem;
+      transition: border-color .2s;
+      text-decoration: none;
+    }
+    .contact-card:hover { border-color: var(--slate-600); }
+    .contact-icon { color: var(--slate-400); flex-shrink: 0; }
+    .contact-label { color: var(--slate-500); font-size: .75rem; }
+    .contact-value { color: white; font-size: .9rem; }
+    .contact-value:hover { color: #93c5fd; }
+
+    /* ── FOOTER ─────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--slate-800);
+      padding: 2rem;
+      text-align: center;
+    }
+    footer p { color: var(--slate-700); font-size: .8rem; font-family: monospace; }
+
+    /* ── RESPONSIVE ─────────────────────────────── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: block; }
+      .mobile-menu.open {
+        display: flex; flex-direction: column; gap: 1rem;
+        position: fixed; top: 72px; left: 0; right: 0;
+        background: rgba(15,23,42,.98);
+        border-bottom: 1px solid var(--slate-800);
+        padding: 1rem 2rem;
+      }
+      .mobile-menu a { color: var(--slate-300); text-decoration: none; font-size: .95rem; }
+      .about-grid { grid-template-columns: 1fr; }
+      .highlight-cards { grid-template-columns: 1fr 1fr; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .work-grid { grid-template-columns: 1fr; }
+      .notes-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      section { padding: 4rem 1.25rem; }
+    }
+    @media (max-width: 480px) {
+      .highlight-cards { grid-template-columns: 1fr; }
+      .hero-cta { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* ── PARTICLES CANVAS ──────────────────────── */
+    #particles {
+      position: fixed; inset: 0; z-index: -1;
+      pointer-events: none;
+    }
+
+    /* ── TYPEWRITER CURSOR ────────────────────── */
+    .cursor-blink {
+      display: inline-block;
+      color: #60a5fa;
+      font-weight: 300;
+      animation: blink .8s step-end infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* fade-in */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade { animation: fadeInUp .6s ease forwards; }
+  </style>
+</head>
+<body>
+
+<!-- ── PARTICLE CANVAS ────────────────────────── -->
+<canvas id="particles"></canvas>
+
+<!-- ── NAVBAR ──────────────────────────────── -->
+<nav id="navbar">
+  <a class="nav-brand" href="#hero">&lt; Portfolio /&gt;</a>
+  <ul class="nav-links">
+    <li><a href="#about">关于</a></li>
+    <li><a href="#skills">技能</a></li>
+    <li><a href="#work">项目方向</a></li>
+    <li><a href="#notes">笔记</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="menu">
+    <svg id="hicon" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about">关于</a>
+  <a href="#skills">技能</a>
+  <a href="#work">项目方向</a>
+  <a href="#notes">笔记</a>
+  <a href="#contact">联系</a>
+</div>
+
+
+<!-- ── HERO ────────────────────────────────── -->
+<!-- 如果你在看源码：这个 section 的 CSS 我调了大概 20 遍 —— 来自一个被 flexbox 折磨的人类 -->
+<section id="hero">
+  <div style="max-width:960px; margin-left:6%; margin-right:auto; padding:0 2rem;">
+    <div class="hero-inner fade">
+      <div class="hero-text">
+      <p class="hero-eyebrow">// Hello, World</p>
+      <h1 class="hero-title">
+        你好，我是<br>
+        <span class="gradient-text" id="type-target"></span><span class="cursor-blink">|</span>
+      </h1>
+      <p class="hero-sub">
+        电子信息方向在读硕士，研究主方向为
+        <span class="accent">强化学习（DRL）</span>与<span class="accent">智能调度优化</span>。
+        同时在自学 <span class="accent">LLM Agent</span> / <span class="accent">RAG</span> 应用开发，业余还在摸索游戏引擎。<br><br>
+        正在构建可交互的 AI 应用与工程化工具链。
+      </p>
+      <div class="hero-cta">
+        <a class="btn-primary" href="#work">查看项目方向 →</a>
+        <a class="btn-secondary" href="#contact">联系我</a>
+      </div>
+      <div class="hero-tags">
+        <span class="hero-tag">LLM Agent</span>
+        <span class="hero-tag">RAG</span>
+        <span class="hero-tag">Python</span>
+        <span class="hero-tag">Scheduling</span>
+        <span class="hero-tag">RL</span>
+        <span class="hero-tag">FastAPI</span>
+        <span class="hero-tag">Linux</span>
+      </div>
+      </div><!-- /.hero-text -->
+    </div>
+  </div>
+  <div class="scroll-arrow">
+    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ── ABOUT ────────────────────────────────── -->
+<section id="about">
+  <div class="container">
+    <p class="section-label">// 01. about</p>
+    <h2 class="section-title">关于我</h2>
+    <div class="title-bar"></div>
+
+    <div class="about-grid">
+      <div class="about-text">
+        <p>目前就读于电子信息专业，硕士研究生阶段。主要方向是将大语言模型与工程实践相结合，构建具备实际可用性的 AI 应用系统。</p>
+        <p>在 <span class="accent">AI 应用开发</span> 方向，关注 LLM Agent 架构设计、RAG 知识检索、Function Calling 与 MCP 协议、以及面向实际业务场景的可交互 Demo 构建。</p>
+        <p>在 <span class="accent">智能优化调度</span> 方向，研究强化学习（DRL）、演化算法与 DAG 建模在工作流调度问题中的应用，结合事件驱动仿真进行多场景实验评估。</p>
+        <p>同步积累 Python 工程实践、Linux 开发环境配置、计算机基础与面试准备笔记，持续整理为可复用的学习资料。</p>
+      </div>
+      <div class="highlight-cards">
+        <div class="hl-card"><div class="hl-icon">🎓</div><div class="hl-title">电子信息</div><div class="hl-desc">硕士在读，研究方向聚焦 AI 应用与系统优化</div></div>
+        <div class="hl-card"><div class="hl-icon">🤖</div><div class="hl-title">LLM & Agent</div><div class="hl-desc">关注 Agent Workflow、Function Calling 与 RAG 检索增强</div></div>
+        <div class="hl-card"><div class="hl-icon">⚙️</div><div class="hl-title">智能调度</div><div class="hl-desc">探索强化学习与演化算法在复杂调度场景中的应用</div></div>
+        <div class="hl-card"><div class="hl-icon">🔧</div><div class="hl-title">Python 工程</div><div class="hl-desc">重视工程化实践：模块化设计、测试覆盖与 CI/CD</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SKILLS ───────────────────────────────── -->
+<section id="skills">
+  <div class="container">
+    <p class="section-label">// 02. skills</p>
+    <h2 class="section-title">技能栈</h2>
+    <div class="title-bar"></div>
+
+    <div class="skills-grid">
+      <div class="skill-group c-blue">
+        <div class="skill-header">
+          <span class="skill-dot"></span>
+          <span class="skill-cat-name">AI / ML</span>
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag">LangChain</span><span class="skill-tag">LangGraph</span>
+          <span class="skill-tag">OpenAI API</span><span class="skill-tag">RAG</span>
+          <span class="skill-tag">Function Calling</span><span class="skill-tag">MCP Protocol</span>
+          <span class="skill-tag">Prompt Engineering</span><span class="skill-tag">Vector DB</span>
+        </div>
+      </div>
+      <div class="skill-group c-violet">
+        <div class="skill-header">
+          <span class="skill-dot"></span>
+          <span class="skill-cat-name">Python 工程</span>
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag">Python 3.x</span><span class="skill-tag">FastAPI</span>
+          <span class="skill-tag">Pydantic</span><span class="skill-tag">asyncio</span>
+          <span class="skill-tag">SQLAlchemy</span><span class="skill-tag">pytest</span>
+          <span class="skill-tag">Poetry / uv</span><span class="skill-tag">Docker</span>
+        </div>
+      </div>
+      <div class="skill-group c-cyan">
+        <div class="skill-header">
+          <span class="skill-dot"></span>
+          <span class="skill-cat-name">优化 & 算法</span>
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag">PyTorch</span><span class="skill-tag">Gymnasium</span>
+          <span class="skill-tag">DRL (PPO/DQN)</span><span class="skill-tag">演化算法</span>
+          <span class="skill-tag">DAG 建模</span><span class="skill-tag">事件驱动仿真</span>
+          <span class="skill-tag">NumPy / SciPy</span><span class="skill-tag">Matplotlib</span>
+        </div>
+      </div>
+      <div class="skill-group c-emerald">
+        <div class="skill-header">
+          <span class="skill-dot"></span>
+          <span class="skill-cat-name">工具 & 环境</span>
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag">Git / GitHub</span><span class="skill-tag">Linux (Ubuntu)</span>
+          <span class="skill-tag">VS Code</span><span class="skill-tag">Jupyter</span>
+          <span class="skill-tag">PostgreSQL</span><span class="skill-tag">Redis</span>
+          <span class="skill-tag">Vercel</span><span class="skill-tag">CI/CD</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WORK ─────────────────────────────────── -->
+<section id="work">
+  <div class="container">
+    <p class="section-label">// 03. work in progress</p>
+    <h2 class="section-title">项目方向</h2>
+    <div class="title-bar"></div>
+    <p class="work-sub">以下是目前正在深耕的三个方向，相关项目持续迭代中。</p>
+
+    <div class="work-grid">
+      <!-- Card A -->
+      <div class="work-card wc-blue">
+        <div class="work-card-top">
+          <div class="work-icon">🤖</div>
+          <span class="work-badge">In Progress</span>
+        </div>
+        <h3 class="work-title">LLM Agent Applications</h3>
+        <p class="work-subtitle">AI 应用开发</p>
+        <p class="work-desc">关注 Agent Workflow 设计、Function Calling 与外部 API 工具调用、RAG 知识检索与增强、长期记忆管理，以及可交互 Demo 的工程化构建。探索 LangChain / LangGraph 框架与 MCP 协议在实际任务中的落地路径。</p>
+        <div class="work-tags">
+          <span class="work-tag">LangChain</span>
+          <span class="work-tag">LangGraph</span>
+          <span class="work-tag">RAG</span>
+          <span class="work-tag">Function Calling</span>
+          <span class="work-tag">MCP</span>
+          <span class="work-tag">FastAPI</span>
+        </div>
+      </div>
+
+      <!-- Card B -->
+      <div class="work-card wc-violet">
+        <div class="work-card-top">
+          <div class="work-icon">⚙️</div>
+          <span class="work-badge" style="color:#a78bfa;background:rgba(124,58,237,.2);border-color:rgba(139,92,246,.35)">In Progress</span>
+        </div>
+        <h3 class="work-title">Scheduling & Optimization</h3>
+        <p class="work-subtitle">调度与智能优化</p>
+        <p class="work-desc">关注工作流调度问题的建模（DAG）与求解，结合强化学习（DRL）和演化算法（GA/PSO）设计智能调度策略。使用事件驱动仿真框架进行多场景实验评估，系统比较各类方法在不同负载下的表现。</p>
+        <div class="work-tags">
+          <span class="work-tag">DRL</span>
+          <span class="work-tag">DAG</span>
+          <span class="work-tag">GA/PSO</span>
+          <span class="work-tag">仿真</span>
+          <span class="work-tag">PyTorch</span>
+          <span class="work-tag">Gymnasium</span>
+        </div>
+      </div>
+
+      <!-- Card C -->
+      <div class="work-card wc-cyan">
+        <div class="work-card-top">
+          <div class="work-icon">📝</div>
+          <span class="work-badge" style="color:#67e8f9;background:rgba(8,145,178,.2);border-color:rgba(6,182,212,.35)">In Progress</span>
+        </div>
+        <h3 class="work-title">Engineering Notes</h3>
+        <p class="work-subtitle">技术笔记与工程积累</p>
+        <p class="work-desc">持续整理 Python 工程实践、Linux 开发环境配置、LLM Agent 开发经验、计算机基础（操作系统、网络、数据库）与算法面试备考笔记。目标是形成系统化、可复用的技术参考资料。</p>
+        <div class="work-tags">
+          <span class="work-tag">Python</span>
+          <span class="work-tag">Linux</span>
+          <span class="work-tag">CS 基础</span>
+          <span class="work-tag">面试准备</span>
+          <span class="work-tag">Obsidian</span>
+          <span class="work-tag">Git</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── NOTES ────────────────────────────────── -->
+<section id="notes">
+  <div class="container">
+    <p class="section-label">// 04. notes</p>
+    <h2 class="section-title">学习笔记</h2>
+    <div class="title-bar"></div>
+    <p class="notes-sub">持续整理技术笔记，以覆盖广度为先，逐步加深每个方向的体系化程度。</p>
+
+    <div class="notes-grid">
+      <div class="note-card">
+        <div class="note-header"><span class="note-icon">🤖</span><span class="note-title">LLM & Agent 开发</span></div>
+        <p class="note-desc">覆盖 Prompt Engineering、Agent 设计模式、RAG 架构、LangChain / LangGraph 实践要点与踩坑记录。</p>
+        <div class="note-tags">
+          <span class="note-tag">Prompt</span><span class="note-tag">RAG</span><span class="note-tag">Agent</span><span class="note-tag">LangGraph</span>
+        </div>
+      </div>
+      <div class="note-card">
+        <div class="note-header"><span class="note-icon">🐍</span><span class="note-title">Python 工程实践</span></div>
+        <p class="note-desc">包含项目结构设计、依赖管理（Poetry/uv）、异步编程、测试策略、FastAPI 开发与性能调优。</p>
+        <div class="note-tags">
+          <span class="note-tag">FastAPI</span><span class="note-tag">asyncio</span><span class="note-tag">pytest</span><span class="note-tag">Poetry</span>
+        </div>
+      </div>
+      <div class="note-card">
+        <div class="note-header"><span class="note-icon">🐧</span><span class="note-title">Linux 开发环境</span></div>
+        <p class="note-desc">整理 Ubuntu 配置、Shell 脚本、终端工具链（tmux/zsh/nvim）、SSH 与服务器运维常用操作。</p>
+        <div class="note-tags">
+          <span class="note-tag">Ubuntu</span><span class="note-tag">Shell</span><span class="note-tag">tmux</span><span class="note-tag">nvim</span>
+        </div>
+      </div>
+      <div class="note-card">
+        <div class="note-header"><span class="note-icon">💻</span><span class="note-title">计算机基础</span></div>
+        <p class="note-desc">覆盖操作系统、计算机网络、数据库原理与 SQL 优化，以经典面试考点为导向，系统梳理核心知识。</p>
+        <div class="note-tags">
+          <span class="note-tag">OS</span><span class="note-tag">网络</span><span class="note-tag">MySQL</span><span class="note-tag">数据结构</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ──────────────────────────────── -->
+<section id="contact">
+  <div class="container">
+    <p class="section-label">// 05. contact</p>
+    <h2 class="section-title">联系方式</h2>
+    <div class="title-bar"></div>
+
+    <div class="contact-grid">
+      <div class="contact-text">
+        <p>如果你对 AI 应用开发、智能调度、工程实践方向感兴趣，或有实习 / 合作机会，欢迎通过以下方式联系。</p>
+        <p class="muted">一般会在 24 小时内回复邮件。</p>
+        <a class="btn-download" href="/resume.pdf" download>
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          下载简历 (PDF)
+        </a>
+      </div>
+      <div class="contact-cards">
+        <a class="contact-card" href="mailto:reyn7@qq.com">
+          <div class="contact-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="contact-label">邮箱</div>
+            <div class="contact-value">reyn7@qq.com</div>
+          </div>
+        </a>
+        <div class="contact-card">
+          <div class="contact-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="contact-label">城市</div>
+            <div class="contact-value">杭州</div>
+          </div>
+        </div>
+        <a class="contact-card" href="https://github.com/your-username" target="_blank" rel="noopener">
+          <div class="contact-icon">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="contact-label">GitHub</div>
+            <div class="contact-value">github.com/your-username</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ───────────────────────────────── -->
+<footer>
+  <p>// 人力 + LLM 联合出品 · 我出 Bug 它出代码 · 咖啡因驱动 · 2026</p>
+</footer>
+
+
+<script>
+  // ═══════════════════════════════════════════════
+  //  1. CONSOLE EASTER EGG
+  // ═══════════════════════════════════════════════
+  console.log(
+    '%c👀 你打开了控制台，看来是同道中人。\n%c虽然这个页面有一部分是 LLM 写的，但 Bug 归我。\n%c如果发现了什么问题 —— 那大概是我没 review 到。',
+    'font-size:16px;color:#60a5fa;',
+    'font-size:13px;color:#94a3b8;',
+    'font-size:12px;color:#64748b;'
+  );
+  console.log('%c' + [
+    '    ╔══════════════════════════════════╗',
+    '    ║   ⚡  ASK NOT WHAT AI CAN DO    ║',
+    '    ║   ASK WHAT YOU CAN DO WITH AI  ║',
+    '    ╚══════════════════════════════════╝'
+  ].join('\\n'), 'color:#a78bfa;font-family:monospace;');
+
+  // ═══════════════════════════════════════════════
+  //  2. TYPEWRITER EFFECT
+  // ═══════════════════════════════════════════════
+  (function typewriter() {
+    var target = document.getElementById('type-target');
+    var text = '许晨昊';
+    var i = 0;
+    var speed = 80;
+    function type() {
+      if (i < text.length) {
+        target.textContent += text.charAt(i);
+        i++;
+        setTimeout(type, speed + Math.random() * 60);
+      }
+    }
+    // Small delay so the fade-in animation completes first
+    setTimeout(type, 400);
+  })();
+
+  const nav = document.getElementById('navbar');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  // ── Navbar 滚动效果 ──
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // ── 移动端菜单 ──
+  function toggleMenu() {
+    mobileMenu.classList.toggle('open');
+  }
+
+  // 移动端菜单内点击链接后自动关闭
+  document.querySelectorAll('.mobile-menu a').forEach(link => {
+    link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  });
+
+  // ═══════════════════════════════════════════════
+  //  3. PARTICLE SYSTEM
+  // ═══════════════════════════════════════════════
+  (function particles() {
+    var canvas = document.getElementById('particles');
+    var ctx = canvas.getContext('2d');
+    var w, h;
+    var particles = [];
+    var mouse = { x: -9999, y: -9999 };
+    var COUNT = 60;
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = document.documentElement.scrollHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    window.addEventListener('scroll', function() {
+      h = canvas.height = document.documentElement.scrollHeight;
+    });
+
+    document.addEventListener('mousemove', function(e) {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY + window.scrollY;
+    });
+
+    function create() {
+      return {
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        r: Math.random() * 2 + 0.8,
+        baseR: 0,
+        alpha: Math.random() * 0.35 + 0.1
+      };
+    }
+
+    for (var i = 0; i < COUNT; i++) {
+      var p = create();
+      p.baseR = p.r;
+      particles.push(p);
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      var color = '96, 165, 250'; // blue-400
+
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+
+        // Move
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Wrap around
+        if (p.x < 0) p.x = w;
+        if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h;
+        if (p.y > h) p.y = 0;
+
+        // Mouse attraction
+        var dx = mouse.x - p.x;
+        var dy = mouse.y - p.y;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 150) {
+          var force = (150 - dist) / 150;
+          p.vx -= dx * force * 0.0006;
+          p.vy -= dy * force * 0.0006;
+          p.r = p.baseR + force * 2.5;
+        } else {
+          p.r += (p.baseR - p.r) * 0.1;
+        }
+
+        // Speed damping
+        p.vx *= 0.999;
+        p.vy *= 0.999;
+
+        // Draw
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + color + ',' + p.alpha + ')';
+        ctx.fill();
+      }
+
+      // Draw connections
+      for (var i = 0; i < particles.length; i++) {
+        for (var j = i + 1; j < particles.length; j++) {
+          var dx2 = particles[i].x - particles[j].x;
+          var dy2 = particles[i].y - particles[j].y;
+          var d = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+          if (d < 120) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = 'rgba(' + color + ',' + (0.06 * (1 - d / 120)) + ')';
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  })();
+
+  // ═══════════════════════════════════════════════
+  //  3. THEME TOGGLE — removed; dark-only design
+  // ═══════════════════════════════════════════════
+
+  // ── 元素渐入（视口内渐显） ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.hl-card, .skill-group, .work-card, .note-card, .contact-card, .about-text, .contact-text').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity .5s ease, transform .5s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
