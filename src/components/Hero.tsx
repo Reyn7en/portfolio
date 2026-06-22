@@ -2,38 +2,43 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="min-h-screen flex flex-col justify-center items-start px-6 pt-20 max-w-5xl ml-[6%] relative"
+      className="min-h-screen relative"
     >
+      {/* ── Full-width background layers (NOT constrained by max-w) ── */}
+
       {/* Decorative gradient overlay */}
       <div
-        className="absolute inset-0 -z-10 pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage:
             'radial-gradient(circle at 20% 40%, rgba(37,99,235,0.12) 0%, transparent 55%), radial-gradient(circle at 80% 60%, rgba(124,58,237,0.08) 0%, transparent 50%)',
         }}
       />
 
-      {/* Asuka full background — positioned right, no mask (mask-image has CDN compat issues) */}
-      <div
-        className="absolute inset-0 pointer-events-none overflow-hidden"
-      >
+      {/* Asuka background — full viewport width, right aligned */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div
+          className="absolute inset-0"
           style={{
             backgroundImage: 'url(/asuka-bg.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'right center',
             backgroundRepeat: 'no-repeat',
             opacity: 0.15,
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            right: '-10%',
-            left: '30%',
+          }}
+        />
+        {/* Left-to-right fade: hides the blank left half of the image */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(to right, #0f172a 0%, #0f172a 25%, transparent 50%)',
           }}
         />
       </div>
 
-      <div className="animate-fadeInUp relative z-10">
+      {/* ── Content (constrained width, left-aligned) ── */}
+      <div className="animate-fadeInUp max-w-5xl ml-[6%] min-h-screen flex flex-col justify-center items-start px-6 pt-20 relative z-10">
         <p className="text-blue-400 font-mono text-sm mb-4 tracking-widest uppercase">
           {'// Hello, World'}
         </p>
