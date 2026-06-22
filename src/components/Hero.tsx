@@ -27,14 +27,6 @@ export default function Hero() {
             opacity: 0.15,
           }}
         />
-        {/* Left-to-right fade: hides the blank left half of the image */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(to right, #0f172a 0%, #0f172a 25%, transparent 50%)',
-          }}
-        />
       </div>
 
       {/* ── Content (constrained width, left-aligned) ── */}
