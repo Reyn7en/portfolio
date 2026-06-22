@@ -104,23 +104,23 @@
       padding-top: 5rem;
       position: relative;
       overflow: hidden;
-    }
-    #hero::before {
-      content: '';
-      position: absolute; inset: 0; z-index: 0;
       background:
         radial-gradient(circle at 20% 40%, rgba(37,99,235,.13) 0%, transparent 55%),
         radial-gradient(circle at 80% 60%, rgba(124,58,237,.08) 0%, transparent 50%);
-      pointer-events: none;
     }
-    /* Asuka background layer — positioned right, no mask for max compat */
+    /* Asuka background — full viewport width, right aligned */
     #hero::after {
       content: '';
-      position: absolute;
-      top: 0; bottom: 0; left: 30%; right: -10%;
-      z-index: 0;
+      position: absolute; inset: 0; z-index: 0;
       background: url(public/asuka-bg.png) right center/cover no-repeat;
       opacity: 0.15;
+      pointer-events: none;
+    }
+    /* Left-to-right fade: hides the blank left half of the image */
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(to right, #0f172a 0%, #0f172a 25%, transparent 50%);
       pointer-events: none;
     }
     .hero-inner { position: relative; z-index: 1; }

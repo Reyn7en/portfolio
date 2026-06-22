@@ -1,3 +1,5 @@
+import Typewriter from './Typewriter'
+
 export default function Hero() {
   return (
     <section
@@ -46,7 +48,7 @@ export default function Hero() {
         <h1 className="text-5xl md:text-7xl font-bold text-white mb-2 leading-tight">
           你好，我是
           <br />
-          <span className="gradient-text">许晨昊</span>
+          <span className="gradient-text"><Typewriter text="许晨昊" /></span>
         </h1>
 
         <p className="text-slate-400 text-lg md:text-xl mt-4 mb-8 max-w-3xl leading-relaxed">

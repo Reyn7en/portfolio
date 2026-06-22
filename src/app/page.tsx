@@ -6,10 +6,14 @@ import Work from '@/components/Work'
 import Notes from '@/components/Notes'
 import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
+import Particles from '@/components/Particles'
+import ConsoleEgg from '@/components/ConsoleEgg'
 
 export default function Home() {
   return (
     <main className="relative">
+      <ConsoleEgg />
+      <Particles />
       <Navbar />
       <Hero />
       <About />
