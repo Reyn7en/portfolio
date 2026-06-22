@@ -19,11 +19,11 @@ export default function Hero() {
         style={{
           backgroundImage: 'url(/asuka-bg.png)',
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundPosition: 'right center',
           backgroundRepeat: 'no-repeat',
-          opacity: 0.15,
-          maskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,1) 100%)',
-          WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,1) 100%)',
+          opacity: 0.18,
+          maskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,1) 35%, rgba(0,0,0,1) 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,1) 35%, rgba(0,0,0,1) 100%)',
         }}
       />
 
