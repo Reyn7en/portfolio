@@ -266,7 +266,7 @@
       padding: 1.5rem;
       transition: all .2s;
     }
-    .work-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,.3); }
+    .work-card:hover { box-shadow: 0 12px 30px rgba(0,0,0,.3); }
     .work-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
     .work-icon {
       width: 3rem; height: 3rem;
@@ -419,9 +419,72 @@
       to { opacity: 1; transform: translateY(0); }
     }
     .fade { animation: fadeInUp .6s ease forwards; }
+
+    /* ── CUSTOM CURSOR ──────────────────────── */
+    @media (hover: hover) {
+      * { cursor: none !important; }
+      .cursor-dot {
+        position: fixed; top: 0; left: 0; z-index: 9999;
+        width: 8px; height: 8px; background: #60a5fa;
+        border-radius: 50%; margin: -4px 0 0 -4px;
+        pointer-events: none;
+        transition: width .2s, height .2s, margin .2s, background .2s;
+        will-change: transform;
+      }
+      .cursor-dot.cursor-hover {
+        width: 4px; height: 4px; margin: -2px 0 0 -2px; background: #a78bfa;
+      }
+      .cursor-dot.cursor-magnetic {
+        width: 40px; height: 40px; margin: -20px 0 0 -20px;
+        background: rgba(96,165,250,.2); border: 1.5px solid #60a5fa;
+      }
+      .cursor-ring {
+        position: fixed; top: 0; left: 0; z-index: 9998;
+        width: 32px; height: 32px;
+        border: 1.5px solid rgba(96,165,250,.4);
+        border-radius: 50%; margin: -16px 0 0 -16px;
+        pointer-events: none;
+        transition: width .2s, height .2s, margin .2s, border-color .2s, opacity .2s;
+        will-change: transform;
+      }
+      .cursor-ring.cursor-ring-active {
+        width: 48px; height: 48px; margin: -24px 0 0 -24px;
+        border-color: rgba(167,139,250,.6);
+      }
+    }
+
+    /* ── TILT CARD ──────────────────────────── */
+    .tilt-card {
+      position: relative;
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform .15s ease-out;
+    }
+    .tilt-glare {
+      position: absolute; inset: 0; border-radius: inherit;
+      pointer-events: none; opacity: 0; z-index: 1;
+      transition: opacity .3s;
+    }
+
+    /* ── MOUSE GLOW ─────────────────────────── */
+    #mouseGlow {
+      position: fixed; top: -300px; left: -300px;
+      width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+      mix-blend-mode: screen;
+      will-change: transform;
+    }
   </style>
 </head>
 <body>
+
+<!-- ── CUSTOM CURSOR ──────────────────────────── -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ── MOUSE GLOW ─────────────────────────────── -->
+<div id="mouseGlow"></div>
 
 <!-- ── PARTICLE CANVAS ────────────────────────── -->
 <canvas id="particles"></canvas>
@@ -469,8 +532,8 @@
         正在构建可交互的 AI 应用与工程化工具链。
       </p>
       <div class="hero-cta">
-        <a class="btn-primary" href="#work">查看项目方向 →</a>
-        <a class="btn-secondary" href="#contact">联系我</a>
+        <a class="btn-primary" href="#work" data-magnetic>查看项目方向 →</a>
+        <a class="btn-secondary" href="#contact" data-magnetic>联系我</a>
       </div>
       <div class="hero-tags">
         <span class="hero-tag">LLM Agent</span>
@@ -523,7 +586,8 @@
     <div class="title-bar"></div>
 
     <div class="skills-grid">
-      <div class="skill-group c-blue">
+      <div class="skill-group tilt-card c-blue">
+        <div class="tilt-glare"></div>
         <div class="skill-header">
           <span class="skill-dot"></span>
           <span class="skill-cat-name">AI / ML</span>
@@ -535,7 +599,8 @@
           <span class="skill-tag">Prompt Engineering</span><span class="skill-tag">Vector DB</span>
         </div>
       </div>
-      <div class="skill-group c-violet">
+      <div class="skill-group tilt-card c-violet">
+        <div class="tilt-glare"></div>
         <div class="skill-header">
           <span class="skill-dot"></span>
           <span class="skill-cat-name">Python 工程</span>
@@ -547,7 +612,8 @@
           <span class="skill-tag">Poetry / uv</span><span class="skill-tag">Docker</span>
         </div>
       </div>
-      <div class="skill-group c-cyan">
+      <div class="skill-group tilt-card c-cyan">
+        <div class="tilt-glare"></div>
         <div class="skill-header">
           <span class="skill-dot"></span>
           <span class="skill-cat-name">优化 & 算法</span>
@@ -559,7 +625,8 @@
           <span class="skill-tag">NumPy / SciPy</span><span class="skill-tag">Matplotlib</span>
         </div>
       </div>
-      <div class="skill-group c-emerald">
+      <div class="skill-group tilt-card c-emerald">
+        <div class="tilt-glare"></div>
         <div class="skill-header">
           <span class="skill-dot"></span>
           <span class="skill-cat-name">工具 & 环境</span>
@@ -585,7 +652,8 @@
 
     <div class="work-grid">
       <!-- Card A -->
-      <div class="work-card wc-blue">
+      <div class="work-card tilt-card wc-blue">
+        <div class="tilt-glare"></div>
         <div class="work-card-top">
           <div class="work-icon">🤖</div>
           <span class="work-badge">In Progress</span>
@@ -604,7 +672,8 @@
       </div>
 
       <!-- Card B -->
-      <div class="work-card wc-violet">
+      <div class="work-card tilt-card wc-violet">
+        <div class="tilt-glare"></div>
         <div class="work-card-top">
           <div class="work-icon">⚙️</div>
           <span class="work-badge" style="color:#a78bfa;background:rgba(124,58,237,.2);border-color:rgba(139,92,246,.35)">In Progress</span>
@@ -623,7 +692,8 @@
       </div>
 
       <!-- Card C -->
-      <div class="work-card wc-cyan">
+      <div class="work-card tilt-card wc-cyan">
+        <div class="tilt-glare"></div>
         <div class="work-card-top">
           <div class="work-icon">📝</div>
           <span class="work-badge" style="color:#67e8f9;background:rgba(8,145,178,.2);border-color:rgba(6,182,212,.35)">In Progress</span>
@@ -920,17 +990,119 @@
     entries.forEach(e => {
       if (e.isIntersecting) {
         e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
+        if (!e.target.classList.contains('tilt-card')) {
+          e.target.style.transform = 'translateY(0)';
+        }
       }
     });
   }, { threshold: 0.1 });
 
   document.querySelectorAll('.hl-card, .skill-group, .work-card, .note-card, .contact-card, .about-text, .contact-text').forEach(el => {
     el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity .5s ease, transform .5s ease';
+    el.style.transition = 'opacity .5s ease';
+    // tilt-card elements manage their own transform — only fade opacity
+    if (!el.classList.contains('tilt-card')) {
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity .5s ease, transform .5s ease';
+    }
     observer.observe(el);
   });
+
+  // ═══════════════════════════════════════════════
+  //  5. CUSTOM CURSOR + MAGNETIC BUTTONS
+  // ═══════════════════════════════════════════════
+  (function customCursor() {
+    if (window.matchMedia('(hover: none)').matches) return;
+    var dot = document.getElementById('cursorDot');
+    var ring = document.getElementById('cursorRing');
+    if (!dot || !ring) return;
+    var mx = 0, my = 0, dx = 0, dy = 0, rx = 0, ry = 0, raf;
+
+    document.addEventListener('mousemove', function(e) {
+      mx = e.clientX; my = e.clientY;
+      var target = e.target;
+      var magnetic = target.closest && target.closest('[data-magnetic]');
+      var interactive = target.closest && target.closest('a, button, [data-cursor]');
+      if (magnetic) {
+        var rect = magnetic.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + rect.height / 2;
+        dx = mx + (cx - mx) * 0.3;
+        dy = my + (cy - my) * 0.3;
+        dot.classList.add('cursor-magnetic');
+        ring.classList.add('cursor-ring-active');
+      } else if (interactive) {
+        dx = mx; dy = my;
+        dot.classList.remove('cursor-magnetic');
+        dot.classList.add('cursor-hover');
+        ring.classList.add('cursor-ring-active');
+      } else {
+        dx = mx; dy = my;
+        dot.classList.remove('cursor-magnetic', 'cursor-hover');
+        ring.classList.remove('cursor-ring-active');
+      }
+    });
+    document.addEventListener('mouseleave', function() { dot.style.opacity = '0'; ring.style.opacity = '0'; });
+    document.addEventListener('mouseenter', function() { dot.style.opacity = '1'; ring.style.opacity = '1'; });
+
+    function loop() {
+      rx += (dx - rx) * 0.15;
+      ry += (dy - ry) * 0.15;
+      dot.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+      ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px)';
+      raf = requestAnimationFrame(loop);
+    }
+    raf = requestAnimationFrame(loop);
+  })();
+
+  // ═══════════════════════════════════════════════
+  //  6. 3D TILT CARDS
+  // ═══════════════════════════════════════════════
+  (function tiltCards() {
+    if (window.matchMedia('(hover: none)').matches) return;
+    var maxAngle = 8;
+    document.querySelectorAll('.tilt-card').forEach(function(card) {
+      var isWork = card.classList.contains('work-card');
+      if (isWork) maxAngle = 10;
+      var glare = card.querySelector('.tilt-glare');
+      card.addEventListener('mousemove', function(e) {
+        var rect = card.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+        var cx = rect.width / 2, cy = rect.height / 2;
+        var rx = (y - cy) / cy;
+        var ry = (cx - x) / cx;
+        card.style.transform = 'perspective(800px) rotateX(' + (rx * maxAngle) + 'deg) rotateY(' + (ry * maxAngle) + 'deg)';
+        if (glare) {
+          glare.style.background = 'radial-gradient(circle at ' + x + 'px ' + y + 'px, rgba(255,255,255,0.08), transparent 50%)';
+          glare.style.opacity = '1';
+        }
+      });
+      card.addEventListener('mouseleave', function() {
+        card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg)';
+        if (glare) glare.style.opacity = '0';
+      });
+    });
+  })();
+
+  // ═══════════════════════════════════════════════
+  //  7. MOUSE GLOW
+  // ═══════════════════════════════════════════════
+  (function mouseGlow() {
+    if (window.matchMedia('(hover: none)').matches) return;
+    var el = document.getElementById('mouseGlow');
+    if (!el) return;
+    var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    var cx = mx, cy = my, raf;
+    document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
+    function loop() {
+      cx += (mx - cx) * 0.08;
+      cy += (my - cy) * 0.08;
+      el.style.transform = 'translate(' + cx + 'px,' + cy + 'px)';
+      raf = requestAnimationFrame(loop);
+    }
+    raf = requestAnimationFrame(loop);
+  })();
 </script>
 </body>
 </html>

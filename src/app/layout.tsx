@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import Navbar from '@/components/Navbar'
 
 export const metadata: Metadata = {
   title: '个人主页 | CS / AI 方向研究生',
@@ -22,7 +21,6 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body>
-        <Navbar />
         {children}
       </body>
     </html>

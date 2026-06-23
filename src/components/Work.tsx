@@ -52,6 +52,8 @@ const accentMap: Record<string, { border: string; bg: string; tag: string; badge
   },
 }
 
+import TiltCard from './TiltCard'
+
 export default function Work() {
   return (
     <section id="work" className="py-24 px-6 max-w-5xl mx-auto">
@@ -68,9 +70,10 @@ export default function Work() {
         {workItems.map((item) => {
           const a = accentMap[item.accent]
           return (
-            <div
+            <TiltCard
               key={item.id}
-              className={`relative flex flex-col bg-slate-800/50 border border-slate-700 ${a.border} rounded-2xl p-6 transition-all duration-200 hover:-translate-y-1 hover:shadow-xl`}
+              max={10}
+              className={`relative flex flex-col bg-slate-800/50 border border-slate-700 ${a.border} rounded-2xl p-6 transition-colors duration-200 hover:shadow-xl`}
             >
               {/* Icon & badge */}
               <div className="flex items-start justify-between mb-4">
@@ -102,7 +105,7 @@ export default function Work() {
                   </span>
                 ))}
               </div>
-            </div>
+            </TiltCard>
           )
         })}
       </div>

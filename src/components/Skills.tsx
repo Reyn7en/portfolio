@@ -78,6 +78,8 @@ const dotColorMap: Record<string, string> = {
   emerald: 'bg-emerald-500',
 }
 
+import TiltCard from './TiltCard'
+
 export default function Skills() {
   return (
     <section id="skills" className="py-24 px-6 bg-slate-900/50">
@@ -90,8 +92,9 @@ export default function Skills() {
 
         <div className="grid md:grid-cols-2 gap-6">
           {skillGroups.map((group) => (
-            <div
+            <TiltCard
               key={group.category}
+              max={6}
               className="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 hover:border-slate-600 transition-colors"
             >
               <div className="flex items-center gap-2 mb-4">
@@ -110,7 +113,7 @@ export default function Skills() {
                   </span>
                 ))}
               </div>
-            </div>
+            </TiltCard>
           ))}
         </div>
       </div>

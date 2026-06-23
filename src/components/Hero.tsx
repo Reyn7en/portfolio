@@ -68,12 +68,14 @@ export default function Hero() {
         <div className="flex flex-wrap gap-4 hero-cta">
           <a
             href="#work"
+            data-magnetic
             className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg transition-all duration-200 shadow-lg shadow-blue-900/30 hover:shadow-blue-800/40"
           >
             查看项目方向 →
           </a>
           <a
             href="#contact"
+            data-magnetic
             className="px-6 py-3 border border-slate-600 hover:border-slate-400 text-slate-300 hover:text-white font-medium rounded-lg transition-all duration-200"
           >
             联系我
