@@ -4,3 +4,6 @@ out/
 .env.local
 .env*.local
 *.tsbuildinfo
+.workbuddy/
+FILE_STRUCTURE.md
+scripts/

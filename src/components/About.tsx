@@ -49,7 +49,7 @@ export default function About() {
             结合事件驱动仿真进行多场景实验评估。
           </p>
           <p>
-            同步积累 Python 工程实践、Linux 开发环境配置、计算机基础与面试准备笔记，
+            同步积累 Python 工程实践、Linux 开发环境配置等笔记，
             持续整理为可复用的学习资料。
           </p>
         </div>

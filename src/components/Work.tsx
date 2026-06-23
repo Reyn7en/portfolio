@@ -26,8 +26,8 @@ const workItems = [
     title: 'Engineering Notes',
     subtitle: '技术笔记与工程积累',
     description:
-      '持续整理 Python 工程实践、Linux 开发环境配置、LLM Agent 开发经验、计算机基础（操作系统、网络、数据库）与算法面试备考笔记。目标是形成系统化、可复用的技术参考资料。',
-    tags: ['Python', 'Linux', 'CS 基础', '面试准备', 'Obsidian', 'Git'],
+      '持续整理 Python 工程实践、Linux 开发环境配置、LLM Agent 开发经验与算法面试备考笔记。目标是形成系统化、可复用的技术参考资料。',
+    tags: ['Python', 'Linux', '面试准备', 'Obsidian', 'Git'],
     icon: '📝',
     accent: 'cyan',
     href: '/work/engineering/',

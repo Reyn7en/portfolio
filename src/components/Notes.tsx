@@ -20,13 +20,6 @@ const noteTopics = [
     tags: ['Ubuntu', 'Shell', 'tmux', 'nvim'],
     href: '/notes/linux/',
   },
-  {
-    icon: '💻',
-    title: '计算机基础',
-    desc: '覆盖操作系统、计算机网络、数据库原理与 SQL 优化，以经典面试考点为导向，系统梳理核心知识。',
-    tags: ['OS', '网络', 'MySQL', '数据结构'],
-    href: '/notes/cs/',
-  },
 ]
 
 import Link from 'next/link'

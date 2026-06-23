@@ -16,11 +16,6 @@ const sections = [
     desc: 'Ubuntu / WSL 配置、Shell 脚本、终端工具链（tmux / zsh / nvim）、SSH 与服务器运维',
     tags: ['Linux', 'Shell', 'tmux', 'nvim'],
   },
-  {
-    title: '计算机基础 & 面试准备',
-    desc: '操作系统、计算机网络、数据库原理、数据结构与算法、常见面试题整理',
-    tags: ['OS', '网络', 'MySQL', '算法'],
-  },
 ]
 
 export default function WorkEngineeringPage() {
@@ -30,8 +25,8 @@ export default function WorkEngineeringPage() {
         技术笔记与工程积累
       </h1>
       <p className="text-slate-400 leading-relaxed mb-8 max-w-2xl">
-        持续整理 Python 工程实践、Linux 开发环境配置、LLM Agent 开发经验、
-        计算机基础与算法面试备考笔记，形成系统化、可复用的技术参考资料。
+        持续整理 Python 工程实践、Linux 开发环境配置、LLM Agent 开发经验，
+        形成系统化、可复用的技术参考资料。
       </p>
 
       {/* Badge row */}
