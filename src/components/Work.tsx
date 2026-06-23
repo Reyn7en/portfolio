@@ -8,6 +8,7 @@ const workItems = [
     tags: ['LangChain', 'LangGraph', 'RAG', 'Function Calling', 'MCP', 'FastAPI'],
     icon: '🤖',
     accent: 'blue',
+    href: '/work/agent/',
   },
   {
     id: 'B',
@@ -18,6 +19,7 @@ const workItems = [
     tags: ['DRL', 'DAG', 'GA/PSO', '仿真', 'PyTorch', 'Gymnasium'],
     icon: '⚙️',
     accent: 'violet',
+    href: '/work/scheduling/',
   },
   {
     id: 'C',
@@ -28,6 +30,7 @@ const workItems = [
     tags: ['Python', 'Linux', 'CS 基础', '面试准备', 'Obsidian', 'Git'],
     icon: '📝',
     accent: 'cyan',
+    href: '/work/engineering/',
   },
 ]
 
@@ -53,6 +56,7 @@ const accentMap: Record<string, { border: string; bg: string; tag: string; badge
 }
 
 import TiltCard from './TiltCard'
+import Link from 'next/link'
 
 export default function Work() {
   return (
@@ -70,8 +74,8 @@ export default function Work() {
         {workItems.map((item) => {
           const a = accentMap[item.accent]
           return (
+            <Link key={item.id} href={item.href} className="block">
             <TiltCard
-              key={item.id}
               max={10}
               className={`relative flex flex-col bg-slate-800/50 border border-slate-700 ${a.border} rounded-2xl p-6 transition-colors duration-200 hover:shadow-xl`}
             >
@@ -106,6 +110,7 @@ export default function Work() {
                 ))}
               </div>
             </TiltCard>
+            </Link>
           )
         })}
       </div>

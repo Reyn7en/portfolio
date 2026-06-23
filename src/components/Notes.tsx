@@ -4,26 +4,32 @@ const noteTopics = [
     title: 'LLM & Agent 开发',
     desc: '覆盖 Prompt Engineering、Agent 设计模式、RAG 架构、LangChain / LangGraph 实践要点与踩坑记录。',
     tags: ['Prompt', 'RAG', 'Agent', 'LangGraph'],
+    href: '/notes/agent/',
   },
   {
     icon: '🐍',
     title: 'Python 工程实践',
     desc: '包含项目结构设计、依赖管理（Poetry/uv）、异步编程、测试策略、FastAPI 开发与性能调优。',
     tags: ['FastAPI', 'asyncio', 'pytest', 'Poetry'],
+    href: '/notes/python/',
   },
   {
     icon: '🐧',
     title: 'Linux 开发环境',
     desc: '整理 Ubuntu 配置、Shell 脚本、终端工具链（tmux/zsh/nvim）、SSH 与服务器运维常用操作。',
     tags: ['Ubuntu', 'Shell', 'tmux', 'nvim'],
+    href: '/notes/linux/',
   },
   {
     icon: '💻',
     title: '计算机基础',
     desc: '覆盖操作系统、计算机网络、数据库原理与 SQL 优化，以经典面试考点为导向，系统梳理核心知识。',
     tags: ['OS', '网络', 'MySQL', '数据结构'],
+    href: '/notes/cs/',
   },
 ]
+
+import Link from 'next/link'
 
 export default function Notes() {
   return (
@@ -40,9 +46,10 @@ export default function Notes() {
 
         <div className="grid sm:grid-cols-2 gap-5">
           {noteTopics.map((note) => (
-            <div
+            <Link
               key={note.title}
-              className="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 hover:border-slate-600 transition-colors group"
+              href={note.href}
+              className="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 hover:border-slate-600 transition-colors group block"
             >
               <div className="flex items-center gap-3 mb-3">
                 <span className="text-2xl">{note.icon}</span>
@@ -59,7 +66,7 @@ export default function Notes() {
                   </span>
                 ))}
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
