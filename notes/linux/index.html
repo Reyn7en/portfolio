@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linux 开发环境</title>
+<style>
+  *, ::before, ::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #cbd5e1; min-height: 100vh; }
+  .back-bar { padding: 1rem 1.5rem; border-bottom: 1px solid #1e293b; }
+  .back-bar a { color: #94a3b8; text-decoration: none; font-size: .875rem; transition: color .2s; }
+  .back-bar a:hover { color: #e2e8f0; }
+  .container { max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  h1 { font-size: clamp(1.75rem, 4vw, 2.25rem); color: #f1f5f9; margin-bottom: .5rem; }
+  .subtitle { color: #94a3b8; line-height: 1.7; margin-bottom: 1.5rem; max-width: 42rem; }
+  .badge { display: inline-block; padding: .25rem .75rem; font-size: .75rem; font-weight: 500; border-radius: 9999px; margin-right: .5rem; }
+  .badge-blue { background: rgba(30,64,175,.35); color: #93c5fd; border: 1px solid rgba(30,64,175,.5); }
+  .badge-gray { background: #1e293b; color: #94a3b8; border: 1px solid #334155; }
+  .badge-row { margin-bottom: 2rem; }
+  .section { margin-bottom: 2rem; }
+  .section h2 { font-size: .8rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .75rem; }
+  .outline { display: flex; flex-direction: column; gap: .5rem; }
+  .outline-item { display: flex; align-items: flex-start; gap: .75rem; padding: .75rem; border-radius: .5rem; background: rgba(30,41,59,.3); border: 1px solid rgba(51,65,85,.4); transition: border-color .2s; }
+  .outline-item:hover { border-color: #475569; }
+  .num { width: 1.5rem; height: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: .25rem; font-size: .7rem; font-family: 'Courier New', monospace; color: #64748b; background: #1e293b; flex-shrink: 0; margin-top: .125rem; }
+  .outline-title { color: #f1f5f9; font-size: .875rem; font-weight: 500; }
+  .outline-desc { color: #64748b; font-size: .75rem; margin-top: .125rem; }
+  .footer { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #1e293b; }
+  .footer p { color: #475569; font-size: .75rem; }
+</style>
+</head>
+<body>
+<div class="back-bar">
+  <a href="../../preview.html">← 返回首页</a>
+</div>
+<div class="container">
+  <h1>Linux 开发环境</h1>
+  <p class="subtitle">整理 Ubuntu 配置、Shell 脚本、终端工具链（tmux / zsh / nvim）、SSH 与服务器运维常用操作，目标是能在纯终端环境下高效开发。</p>
+  <div class="badge-row">
+    <span class="badge badge-blue">学习笔记</span>
+    <span class="badge badge-gray">整理中</span>
+  </div>
+  <div class="section">
+    <h2>计划覆盖</h2>
+    <div class="outline">
+      <div class="outline-item"><span class="num">01</span><div><p class="outline-title">Ubuntu / WSL 配置</p><p class="outline-desc">系统初始化、用户权限、包管理（apt）、WSL2 与 Windows 互操作</p></div></div>
+      <div class="outline-item"><span class="num">02</span><div><p class="outline-title">Shell 脚本</p><p class="outline-desc">Bash 基础、变量与参数、条件判断、循环、函数、常用命令行工具链</p></div></div>
+      <div class="outline-item"><span class="num">03</span><div><p class="outline-title">终端工具链</p><p class="outline-desc">tmux 会话管理、zsh + oh-my-zsh、nvim 基础配置与插件</p></div></div>
+      <div class="outline-item"><span class="num">04</span><div><p class="outline-title">SSH 与远程管理</p><p class="outline-desc">密钥管理、端口转发、跳板机配置、screen 后台任务</p></div></div>
+      <div class="outline-item"><span class="num">05</span><div><p class="outline-title">进程与性能</p><p class="outline-desc">ps / top / htop、systemd 服务管理、日志查看（journalctl / tail）</p></div></div>
+      <div class="outline-item"><span class="num">06</span><div><p class="outline-title">常用运维操作</p><p class="outline-desc">Cron 定时任务、磁盘管理、用户与权限、防火墙基础</p></div></div>
+    </div>
+  </div>
+  <div class="footer"><p>基于日常开发环境配置经验整理，持续补充中。</p></div>
+</div>
+</body>
+</html>

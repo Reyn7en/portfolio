@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ReAct 自治循环 — Agent 笔记</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f172a; color: #cbd5e1; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.7; }
+  a { color: #60a5fa; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .topbar { position: sticky; top: 0; z-index: 40; background: rgba(15,23,42,0.95); backdrop-filter: blur(8px); border-bottom: 1px solid #1e293b; }
+  .topbar-inner { max-width: 800px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; gap: 12px; }
+  .back { color: #94a3b8; font-size: 0.875rem; cursor: pointer; }
+  .back:hover { color: #60a5fa; }
+  .sep { color: #475569; }
+  .page-title { color: #e2e8f0; font-size: 0.875rem; font-weight: 500; }
+  .container { max-width: 800px; margin: 0 auto; padding: 40px 24px 80px; }
+  h1 { font-size: 1.6rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+  h2 { font-size: 1.25rem; font-weight: 700; color: #f1f5f9; margin-bottom: 16px; margin-top: 36px; }
+  p { color: #cbd5e1; line-height: 1.7; margin-bottom: 12px; }
+  strong { color: #f1f5f9; }
+  ul { margin: 8px 0 12px 0; padding-left: 20px; }
+  ol { margin: 8px 0 12px 0; padding-left: 20px; }
+  li { margin-bottom: 6px; line-height: 1.6; }
+  code { padding: 2px 6px; border-radius: 4px; background: #1e293b; color: #93c5fd; font-size: 0.85em; font-family: monospace; }
+  pre { background: rgba(30,41,59,0.8); border: 1px solid #334155; border-radius: 8px; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 0.875rem; font-family: monospace; color: #cbd5e1; line-height: 1.6; white-space: pre; }
+  .note { background: rgba(30,58,138,0.2); border: 1px solid rgba(30,64,175,0.4); border-radius: 8px; padding: 12px 16px; margin: 12px 0; font-size: 0.875rem; color: #93c5fd; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 9999px; font-size: 0.7rem; font-weight: 500; border: 1px solid; margin-right: 6px; margin-bottom: 4px; }
+  .badge-green { background: rgba(20,83,45,0.3); color: #86efac; border-color: rgba(20,83,45,0.5); }
+  .badge-blue { background: rgba(30,64,175,0.4); color: #93c5fd; border-color: rgba(30,64,175,0.5); }
+  .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid #1e293b; color: #475569; font-size: 0.75rem; line-height: 1.6; }
+  hr { border: none; border-top: 1px solid #1e293b; margin: 28px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 0.875rem; }
+  th, td { border: 1px solid #334155; padding: 8px 12px; text-align: left; }
+  th { background: #1e293b; color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  td { color: #cbd5e1; }
+  tr:nth-child(even) { background: rgba(30,41,59,0.3); }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="../index.html" class="back">&larr; 返回</a>
+    <span class="sep">/</span>
+    <span class="page-title">ReAct 自治循环</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div style="margin-bottom:32px;">
+    <h1>ReAct 自治循环</h1>
+    <p style="color:#94a3b8;line-height:1.7;margin-bottom:16px;">LangGraph 学习笔记 &middot; 阶段性理解</p>
+  </div>
+
+  <hr />
+
+  <div class="note">以下内容是我基于课程和文档的阶段性理解，不是权威教程。API 名称和参数请发布前对照 LangGraph 官方文档核实。</div>
+
+  <hr />
+
+  <section id="why-react">
+    <h2>1. 为什么需要 ReAct Agent</h2>
+    <p>之前的 Router Agent 和 Tool Calling Agent，流程都是「我（开发者）定好路线，Agent 按路线走」。但真实场景里，有些任务的步骤数、决策路径是事先没法写死的。</p>
+    <p>比如「帮我查北京天气，如果下雨就推荐室内活动」。这需要：查天气 &rarr; 判断结果 &rarr; 决定下一步。这个「判断&rarr;执行&rarr;再判断」的循环，就是 ReAct。</p>
+    <p>我目前的理解：ReAct Agent 的核心就是<strong>让 LLM 自己决定「下一步做什么」</strong>，而不是把所有分支都写死在代码里。</p>
+  </section>
+
+  <hr />
+
+  <section id="react-cycle">
+    <h2>2. ReAct 循环：Thought &rarr; Action &rarr; Observation</h2>
+    <p>ReAct 的全称是 Reasoning + Acting，循环步骤：</p>
+    <ol>
+      <li><strong>Thought</strong>：LLM 思考当前状态和目标，决定下一步</li>
+      <li><strong>Action</strong>：LLM 输出工具调用（tool_call）</li>
+      <li><strong>Observation</strong>：工具执行结果回到 State</li>
+      <li>回到 1，直到 LLM 判断可以输出最终答案</li>
+    </ol>
+    <pre># ReAct 循环伪代码
+while not done:
+    response = llm.invoke(state["messages"])
+    if response.has_tool_calls:
+        for tool_call in response.tool_calls:
+            result = execute_tool(tool_call)
+            state["messages"].append(result)
+    else:
+        break  # LLM 输出了最终答案</pre>
+    <p>我一开始不理解「为什么 LLM 知道什么时候停」。后来明白：靠的是<strong>训练时的指令遵循能力</strong>——当不需要再调用工具时，LLM 直接生成普通文本回复，而不是 tool_calls。</p>
+  </section>
+
+  <hr />
+
+  <section id="create-react">
+    <h2>3. create_react_agent：一行搭建 ReAct Agent</h2>
+    <p>LangGraph 提供了 <code>create_react_agent</code> 这个预置函数，一行代码就能搭建一个完整的 ReAct Agent。</p>
+    <pre>from langgraph.prebuilt import create_react_agent
+
+agent = create_react_agent(
+    model=ChatOpenAI(model="gpt-4o"),
+    tools=[get_weather, search_web, calculate],
+    state_modifier="你是一个有帮助的助手，使用工具来回答用户问题。"
+)
+
+# 使用：直接 invoke
+result = agent.invoke({"messages": [HumanMessage(content="北京天气怎么样？")]})</pre>
+    <p>这行代码背后做了什么：创建了一个 StateGraph，包含 agent 节点（调用 LLM）、tools 节点（执行工具）、条件边（判断是否有 tool_calls，决定下一步），以及循环逻辑。</p>
+    <div class="note">我目前只用过 <code>create_react_agent</code> 的默认行为。官方文档里提到可以自定义 <code>state_modifier</code>（相当于系统提示）、自定义中断条件等，这些我还没实践过。</div>
+  </section>
+
+  <hr />
+
+  <section id="streaming">
+    <h2>4. 流式输出：看到 Agent 的思考过程</h2>
+    <p>ReAct Agent 的循环可能有很多步，如果不流式输出，用户只能看到「thinking...」然后突然收到一大段答案。体验很差。</p>
+    <p>LangGraph 提供了几种流式模式：</p>
+    <ul>
+      <li><code>stream_mode="values"</code>：每次 State 更新后，输出完整 State</li>
+      <li><code>stream_mode="updates"</code>：只输出这次更新了 State 的哪部分（更精简）</li>
+      <li><code>stream_mode="messages"</code>：逐个 token 输出 LLM 的回复（最像聊天体验）</li>
+    </ul>
+    <pre>from langgraph.prebuilt import create_react_agent
+
+agent = create_react_agent(...)
+
+# 流式调用
+for chunk in agent.stream(
+    {"messages": [HumanMessage(content="北京天气，如果下雨推荐室内活动")]},
+    stream_mode="messages"
+):
+    # chunk 是 (message, metadata) 元组
+    print(chunk[0].content, end="", flush=True)</pre>
+    <p>我目前的体会：<code>stream_mode="messages"</code> 最适合和用户交互的场景。<code>"values"</code> 更适合调试，因为你能看到每一步完整的 State。</p>
+  </section>
+
+  <hr />
+
+  <section id="termination">
+    <h2>5. 终止条件：Agent 什么时候停</h2>
+    <p>ReAct Agent 的终止条件其实很朴素：<strong>LLM 不再输出 tool_calls，而是输出普通文本</strong>。此时 <code>create_react_agent</code> 内部的循环就结束了。</p>
+    <p>但有些边界情况需要小心：</p>
+    <ul>
+      <li>LLM 陷入死循环（一直输出 tool_calls，但每次结果都一样）&rarr; 需要设最大步数限制</li>
+      <li>工具执行失败，LLM 不知道怎么处理 &rarr; 需要在 State 里加入错误信息，让 LLM 有机会调整</li>
+      <li>LLM「觉得」任务完成了，但实际没完成 &rarr; 需要在系统提示里强调完成标准</li>
+    </ul>
+    <div class="note">我目前没有在实际项目里遇到死循环问题。课程里提到了 <code>max_iterations</code> 参数，但我还没用过。后续实践后再补充。</div>
+  </section>
+
+  <hr />
+
+  <section id="vs-tool-calling">
+    <h2>6. ReAct Agent vs Tool Calling Agent：什么时候用哪个</h2>
+    <p>我目前的判断标准：</p>
+    <ul>
+      <li><strong>流程固定、步骤明确</strong> &rarr; Tool Calling Agent（用条件边控制流程）</li>
+      <li><strong>步骤数不固定、需要 LLM 自主决策</strong> &rarr; ReAct Agent（让 LLM 自己判断下一步）</li>
+    </ul>
+    <p>举个例子：「用户问天气 &rarr; 调用天气工具 &rarr; 回复」这个流程是固定的，用 Tool Calling Agent 就够了。「帮我研究一下 XX 领域的最新进展」这种开放任务，步骤数没法事先确定，适合用 ReAct。</p>
+    <p>当然，这个边界挺模糊的。我目前也没有太多实战经验来判断什么时候该用哪个。后续碰到具体场景后再更新这里。</p>
+  </section>
+
+  <hr />
+
+  <section id="summary">
+    <h2>7. 阶段性总结</h2>
+    <p>目前我对 ReAct 自治循环的理解：</p>
+    <ul>
+      <li><strong>ReAct = Reasoning + Acting。</strong>LLM 自己决定下一步，而不是开发者写死所有分支。</li>
+      <li><strong>循环终止条件很简单。</strong>LLM 不输出 tool_calls 了，就停了。</li>
+      <li><code>create_react_agent</code> <strong>一行搭建</strong>，但背后是一整套 StateGraph + 条件边 + 循环逻辑。</li>
+      <li><strong>流式输出很重要。</strong>ReAct 可能有很多步，不流式的话用户体验很差。</li>
+      <li><strong>和 Tool Calling Agent 的选择</strong>取决于流程是否固定。目前我还没有太多实战来判断边界。</li>
+    </ul>
+  </section>
+
+  <div style="margin-top:48px;padding-top:32px;border-top:1px solid #1e293b;display:flex;flex-wrap:wrap;gap:16px;font-size:0.875rem;">
+    <a href="../router-tool-calling/index.html" style="color:#60a5fa;">&larr; 上一篇：Router &amp; Tool Calling Agent</a>
+    <a href="../index.html" style="color:#94a3b8;">返回 Agent 笔记索引</a>
+    <a href="../memory-system/index.html" style="color:#60a5fa;">下一篇：记忆系统 &rarr;</a>
+  </div>
+
+</div>
+
+</body>
+</html>

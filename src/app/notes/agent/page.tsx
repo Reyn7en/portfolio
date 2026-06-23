@@ -1,68 +1,173 @@
-import SubPageLayout from '@/components/SubPageLayout'
+import SubPageLayout from "@/components/SubPageLayout"
+import type { Metadata } from "next"
 
-const outline = [
-  { title: 'Function Calling', desc: 'JSON Schema 工具定义、tool_choice 策略、错误处理与重试' },
-  { title: 'LangChain Expression Language', desc: 'Runnable 接口、管道语法、invoke / batch / stream 模式' },
-  { title: 'ReAct 推理循环', desc: 'Thought → Action → Observation 循环、终止条件、Token 管理' },
-  { title: 'LangGraph 基础', desc: 'StateGraph 构建、Node / Edge / 条件边定义与 DAG 编排' },
-  { title: '工具路由与检索增强', desc: '@tool 装饰器、Agentic Search vs 传统检索、RAG 集成模式' },
-  { title: '持久化与流式', desc: 'Checkpointer、thread_id、三种 Stream Mode 对比' },
-  { title: 'Human-in-the-Loop', desc: 'interrupt_before 中断机制、审批流程设计、安全实践' },
-  { title: 'Multi-Agent 架构', desc: 'Single Agent / Supervisor / Hierarchical 三种协作模式对比' },
+export const metadata: Metadata = {
+  title: "Agent 笔记 — 学习笔记",
+  description: "LLM Agent 方向学习笔记索引，覆盖 LangGraph、Tool Calling、RAG 等内容。",
+}
+
+/* ── article card data ─────────────────────── */
+
+const articles = [
+  {
+    id: "langgraph",
+    title: "LangGraph 学习记录：从 State、Node 到 Tool Calling",
+    excerpt: "一份阶段性学习记录，覆盖 State 管理、节点与边、工具调用、Checkpointer 与 Streaming 等核心概念。基于 deeplearning.ai 公开课整理。",
+    tags: ["LangGraph", "学习笔记"],
+    status: "published" as const,
+    href: "/notes/agent/langgraph",
+  },
+  {
+    id: "state",
+    title: "State 深入：add_messages、Reducer 与 StateGraph 选型",
+    excerpt: "TypedDict + Annotated 标准写法、add_messages 的智能合并逻辑、Reducer 函数处理多节点写入冲突、MessageGraph vs StateGraph 的选型思路。",
+    tags: ["LangGraph", "State", "学习笔记"],
+    status: "published" as const,
+    href: "/notes/agent/state",
+  },
+  {
+    id: "router-tool-calling",
+    title: "Router & Tool Calling Agent：条件边路由与工具调用",
+    excerpt: "条件边路由机制、结构化输出 with_structured_output、@tool 装饰器、ToolNode 封装、bind_tools 绑定工具到 LLM。",
+    tags: ["LangGraph", "Tool Calling", "学习笔记"],
+    status: "published" as const,
+    href: "/notes/agent/router-tool-calling",
+  },
+  {
+    id: "react-loop",
+    title: "ReAct 自治循环：Reasoning + Acting 的自主决策",
+    excerpt: "create_react_agent 一行搭建、Thought→Action→Observation 循环、流式输出 stream_mode、终止条件与死循环防护。",
+    tags: ["LangGraph", "ReAct", "学习笔记"],
+    status: "published" as const,
+    href: "/notes/agent/react-loop",
+  },
+  {
+    id: "memory-system",
+    title: "记忆系统：Checkpointer 与 Store 的分工与实践",
+    excerpt: "Checkpointer 短期会话记忆、Store 长期跨会话记忆、MemorySaver/SqliteSaver/PostgresSaver 选型、混合使用场景与踩坑记录。",
+    tags: ["LangGraph", "记忆系统", "学习笔记"],
+    status: "published" as const,
+    href: "/notes/agent/memory-system",
+  },
+  {
+    id: "human-in-the-loop",
+    title: "Human-in-the-Loop：人工审批与安全中断",
+    excerpt: "interrupt / Command 机制、审批流设计、敏感操作的安全实践、中断与 Checkpointer 的配合。",
+    tags: ["LangGraph", "Human-in-the-Loop", "学习笔记"],
+    status: "published" as const,
+    href: "/notes/agent/human-in-the-loop",
+  },
+  {
+    id: "multi-agent",
+    title: "Multi-Agent 架构：协作、分工与通信",
+    excerpt: "Supervisor 模式、Hierarchical 分层架构、平级协作、Agent 间通信与任务路由、状态共享与冲突处理。",
+    tags: ["LangGraph", "Multi-Agent", "学习笔记"],
+    status: "published" as const,
+    href: "/notes/agent/multi-agent",
+  },
+  {
+    id: "rag",
+    title: "RAG 集成 & 实战项目",
+    excerpt: "Agentic RAG vs Naive RAG、检索工具设计、多步检索与自我纠错、端到端综合案例、调试技巧。",
+    tags: ["LangGraph", "RAG", "学习笔记"],
+    status: "published" as const,
+    href: "/notes/agent/rag",
+  },
 ]
 
-export default function NotesAgentPage() {
-  return (
-    <SubPageLayout title="LLM & Agent 开发" backHref="/#notes">
-      <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
-        LLM & Agent 开发
-      </h1>
-      <p className="text-slate-400 leading-relaxed mb-8 max-w-2xl">
-        基于 deeplearning.ai 公开课（AI Agents in LangGraph / Functions, Tools and Agents with LangChain）
-        的系统学习笔记，覆盖 Agent 设计模式、工具调用、RAG 架构与 LangGraph 实践要点。
-      </p>
+const pendingTopics: [string, string][] = []
 
-      <div className="flex items-center gap-3 mb-10 flex-wrap">
-        <span className="px-3 py-1 text-xs font-medium rounded-full bg-blue-900/40 text-blue-300 border border-blue-800">
-          学习笔记
-        </span>
-        <span className="px-3 py-1 text-xs font-medium rounded-full bg-green-900/30 text-green-400 border border-green-800">
-          已整理 8 节
-        </span>
+/* ── page component ───────────────────────── */
+
+export default function NotesAgentIndex() {
+  return (
+    <SubPageLayout title="Agent 笔记" backHref="/#notes">
+      {/* page header */}
+      <div className="mb-10">
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">Agent 笔记</h1>
+        <p className="text-slate-400 leading-relaxed max-w-2xl">
+          记录我在 LLM Agent 方向的学习过程，覆盖 LangGraph、Tool Calling、
+          RAG 架构与 Agent 设计模式。内容以阶段性理解为主，持续更新。
+        </p>
+        <div className="flex items-center gap-3 mt-6 flex-wrap">
+          <span className="px-3 py-1 text-xs font-medium rounded-full bg-blue-900/40 text-blue-300 border border-blue-800">
+            学习笔记
+          </span>
+          <span className="text-slate-500 text-xs">{articles.length} 篇已整理 · {pendingTopics.length} 篇待整理</span>
+        </div>
       </div>
 
-      {/* Note outline */}
-      <section>
-        <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">笔记大纲</h2>
-        <div className="space-y-2">
-          {outline.map((item, i) => (
-            <div
-              key={item.title}
-              className="flex items-start gap-3 p-3 rounded-lg bg-slate-800/30 border border-slate-700/40 hover:border-slate-600 transition-colors"
-            >
-              <span className="w-6 h-6 flex items-center justify-center rounded text-xs font-mono text-slate-500 bg-slate-800 shrink-0 mt-0.5">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <div>
-                <p className="text-white text-sm font-medium">{item.title}</p>
-                <p className="text-slate-500 text-xs mt-0.5">{item.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <div className="border-t border-slate-800 pt-8">
+        {/* published articles */}
+        <section className="mb-12">
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">
+            已整理
+          </h2>
+          <div className="space-y-4">
+            {articles.map((a) => (
+              <a
+                key={a.id}
+                href={a.href}
+                className="block p-5 rounded-xl border border-slate-700 bg-slate-800/30 hover:border-blue-700/60 hover:bg-slate-800/60 transition-all group"
+              >
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  {a.tags.map((t) => (
+                    <span key={t} className="px-2 py-0.5 text-[0.7rem] font-medium rounded bg-slate-700/60 text-slate-300">
+                      {t}
+                    </span>
+                  ))}
+                  <span className="px-2 py-0.5 text-[0.7rem] font-medium rounded bg-green-900/30 text-green-400 border border-green-800/40">
+                    已整理
+                  </span>
+                </div>
+                <h3 className="text-lg font-semibold text-white group-hover:text-blue-300 transition-colors">
+                  {a.title}
+                </h3>
+                <p className="text-slate-400 text-sm mt-2 leading-relaxed line-clamp-2">
+                  {a.excerpt}
+                </p>
+                <p className="text-xs text-slate-500 mt-3">点击阅读全文 →</p>
+              </a>
+            ))}
+          </div>
+        </section>
 
-      <div className="mt-12 pt-8 border-t border-slate-800">
-        <p className="text-slate-500 text-sm">
-          学习来源：
-          <a href="https://www.deeplearning.ai/short-courses/ai-agents-in-langgraph/" target="_blank" rel="noopener" className="text-blue-400 hover:underline ml-1">
-            AI Agents in LangGraph
-          </a>
-          <span className="mx-1.5 text-slate-700">|</span>
-          <a href="https://www.deeplearning.ai/short-courses/functions-tools-agents-langchain/" target="_blank" rel="noopener" className="text-blue-400 hover:underline">
-            Functions, Tools and Agents with LangChain
-          </a>
-        </p>
+        {/* pending topics */}
+        <section>
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">
+            待整理大纲
+          </h2>
+          <div className="space-y-2">
+            {pendingTopics.map(([title, desc]) => (
+              <div
+                key={title}
+                className="flex items-start gap-3 p-3 rounded-lg bg-slate-800/20 border border-slate-700/30 opacity-60"
+              >
+                <span className="w-6 h-6 flex items-center justify-center rounded text-xs font-mono text-slate-500 bg-slate-800 shrink-0 mt-0.5">
+                  ?
+                </span>
+                <div>
+                  <p className="text-slate-400 text-sm font-medium">{title}</p>
+                  <p className="text-slate-500 text-xs mt-0.5">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* learning sources */}
+        <div className="mt-12 pt-8 border-t border-slate-800">
+          <p className="text-slate-500 text-sm">
+            学习来源：{" "}
+            <a href="https://www.deeplearning.ai/short-courses/ai-agents-in-langgraph/" target="_blank" rel="noopener" className="text-blue-400 hover:underline">
+              AI Agents in LangGraph
+            </a>
+            {" | "}
+            <a href="https://www.deeplearning.ai/short-courses/functions-tools-agents-langchain/" target="_blank" rel="noopener" className="text-blue-400 hover:underline">
+              Functions, Tools and Agents with LangChain
+            </a>
+          </p>
+        </div>
       </div>
     </SubPageLayout>
   )

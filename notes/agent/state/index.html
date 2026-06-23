@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>State 深入 — Agent 笔记</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f172a; color: #cbd5e1; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.7; }
+  a { color: #60a5fa; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .topbar { position: sticky; top: 0; z-index: 40; background: rgba(15,23,42,0.95); backdrop-filter: blur(8px); border-bottom: 1px solid #1e293b; }
+  .topbar-inner { max-width: 800px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; gap: 12px; }
+  .back { color: #94a3b8; font-size: 0.875rem; cursor: pointer; }
+  .back:hover { color: #60a5fa; }
+  .sep { color: #475569; }
+  .page-title { color: #e2e8f0; font-size: 0.875rem; font-weight: 500; }
+  .container { max-width: 800px; margin: 0 auto; padding: 40px 24px 80px; }
+  h1 { font-size: 1.6rem; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+  h2 { font-size: 1.25rem; font-weight: 700; color: #f1f5f9; margin-bottom: 16px; margin-top: 36px; }
+  p { color: #cbd5e1; line-height: 1.7; margin-bottom: 12px; }
+  strong { color: #f1f5f9; }
+  ul { margin: 8px 0 12px 0; padding-left: 20px; }
+  ol { margin: 8px 0 12px 0; padding-left: 20px; }
+  li { margin-bottom: 6px; line-height: 1.6; }
+  code { padding: 2px 6px; border-radius: 4px; background: #1e293b; color: #93c5fd; font-size: 0.85em; font-family: monospace; }
+  pre { background: rgba(30,41,59,0.8); border: 1px solid #334155; border-radius: 8px; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 0.875rem; font-family: monospace; color: #cbd5e1; line-height: 1.6; white-space: pre; }
+  .note { background: rgba(30,58,138,0.2); border: 1px solid rgba(30,64,175,0.4); border-radius: 8px; padding: 12px 16px; margin: 12px 0; font-size: 0.875rem; color: #93c5fd; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 9999px; font-size: 0.7rem; font-weight: 500; border: 1px solid; margin-right: 6px; margin-bottom: 4px; }
+  .badge-green { background: rgba(20,83,45,0.3); color: #86efac; border-color: rgba(20,83,45,0.5); }
+  .badge-blue { background: rgba(30,64,175,0.4); color: #93c5fd; border-color: rgba(30,64,175,0.5); }
+  .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid #1e293b; color: #475569; font-size: 0.75rem; line-height: 1.6; }
+  hr { border: none; border-top: 1px solid #1e293b; margin: 28px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 0.875rem; }
+  th, td { border: 1px solid #334155; padding: 8px 12px; text-align: left; }
+  th { background: #1e293b; color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  td { color: #cbd5e1; }
+  tr:nth-child(even) { background: rgba(30,41,59,0.3); }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="../index.html" class="back">&larr; 返回</a>
+    <span class="sep">/</span>
+    <span class="page-title">State 深入</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div style="margin-bottom:32px;">
+    <h1>State 深入</h1>
+    <p style="color:#94a3b8;line-height:1.7;margin-bottom:16px;">LangGraph 学习笔记 &middot; 阶段性理解</p>
+  </div>
+
+  <hr />
+
+  <div class="note">以下内容是我基于课程和文档的阶段性理解，不是权威教程。API 名称和参数请发布前对照 LangGraph 官方文档核实。</div>
+
+  <hr />
+
+  <section id="why-state">
+    <h2>1. 为什么 State 值得单独学</h2>
+    <p>在第一篇笔记里，我把 State 概括为「Agent 的共享工作台」。这个说法够用，但真正写代码的时候会发现：State 怎么定义、怎么更新、多个节点怎么安全地读写，这些细节直接决定图能不能跑通。</p>
+    <p>我一开始的理解是：「State 就是一个字典，节点往里面塞东西就行」。后来踩了几次坑才发现，LangGraph 的 State 设计有一套明确的规则，不理解这些规则，图的行为会和你预期的不一样。</p>
+  </section>
+
+  <hr />
+
+  <section id="typeddict">
+    <h2>2. TypedDict + Annotated：State 的标准写法</h2>
+    <p>课程里推荐的 State 定义方式是 <code>TypedDict</code> + <code>Annotated</code>。我之前不太理解为什么要搞这么复杂，直接用 <code>dict</code> 不行吗？</p>
+    <p>后来意识到，LangGraph 需要回答两个问题：</p>
+    <ul>
+      <li>State 里有哪些字段？（类型检查、IDE 补全）</li>
+      <li>每个字段怎么合并？（多个节点写入同一字段时的冲突处理）</li>
+    </ul>
+    <pre>from typing import TypedDict, Annotated
+from langgraph.graph import StateGraph
+from langchain_core.messages import add_messages
+
+class AgentState(TypedDict):
+    messages: Annotated[list, add_messages]
+    step: int</pre>
+    <p><code>Annotated</code> 的第二个参数 <code>add_messages</code> 就是「合并函数」（reducer）。当多个节点都往 <code>messages</code> 写值时，LangGraph 不是直接覆盖，而是用 <code>add_messages</code> 把新消息追加到列表里。</p>
+    <div class="note">我目前只用过 <code>add_messages</code> 这一种 reducer。官方文档里还有其他用法（比如 <code>operator.add</code> 用于数值累加），这些我还没实际用过，后续学到了再补充。</div>
+  </section>
+
+  <hr />
+
+  <section id="add-messages">
+    <h2>3. add_messages 到底在做什么</h2>
+    <p>这是我最开始困惑的地方。<code>add_messages</code> 听起来像「把消息追加到列表末尾」，但实际上它的行为更智能：</p>
+    <ul>
+      <li>如果新消息的 <code>id</code> 和已有消息相同 &rarr; 覆盖（更新）</li>
+      <li>如果 <code>id</code> 不同 &rarr; 追加</li>
+    </ul>
+    <p>这意味着：如果 LLM 生成了一条带 <code>tool_calls</code> 的助手消息，随后工具执行结果回来，<code>add_messages</code> 会把工具结果追加，而不是覆盖之前的助手消息。这正是多轮对话需要的行为。</p>
+    <p>我目前的理解是：<code>add_messages</code> 的设计目标是「让消息列表始终是一棵有序的对话树，而不是一堆乱序的碎片」。这个理解对不对，我还在验证。</p>
+  </section>
+
+  <hr />
+
+  <section id="reducer">
+    <h2>4. Reducer 函数：多个节点写入同一字段怎么办</h2>
+    <p>如果 State 里有一个 <code>step</code> 字段，节点 A 写 <code>step=1</code>，节点 B 写 <code>step=2</code>，LangGraph 用哪个值？</p>
+    <p>答案是：取决于这个字段有没有声明 reducer。</p>
+    <ul>
+      <li><strong>有 reducer</strong>（如 <code>add_messages</code>）&rarr; 按 reducer 逻辑合并</li>
+      <li><strong>没有 reducer</strong> &rarr; 后执行的节点覆盖先执行的节点（最后一次写入生效）</li>
+    </ul>
+    <p>我之前踩过一个坑：State 里定义了一个 <code>results: list</code>，但忘记加 <code>Annotated[..., operator.add]</code>。结果每次节点写入 <code>results</code>，之前的就被覆盖了。加上 reducer 之后才正常累加。</p>
+    <div class="note">这个坑让我意识到：LangGraph 不会自动帮你「合并」任何东西，除非你显式声明 reducer。</div>
+  </section>
+
+  <hr />
+
+  <section id="messagegraph">
+    <h2>5. MessageGraph vs StateGraph：该用哪个？</h2>
+    <p>课程里提到了 <code>MessageGraph</code>，这是一个专门针对「消息列表」场景的简化版 StateGraph。我目前的理解是：</p>
+    <ul>
+      <li><code>MessageGraph</code>：State 只有一个 <code>messages</code> 字段，适合纯对话场景，写法更简洁</li>
+      <li><code>StateGraph</code>：State 可以有任意多个字段，适合需要管理多种状态（消息、步骤计数、检索结果、工具输出等）的场景</li>
+    </ul>
+    <p>我目前所有的练习都用的是 <code>StateGraph</code>，即使场景很简单。原因是：我担心用 <code>MessageGraph</code> 之后，如果后面想加一个新字段（比如 <code>search_results</code>），又要迁移到 <code>StateGraph</code>，不如一开始就直接用更通用的方案。</p>
+    <p>但这个判断对不对，我不确定。如果场景确实只有一个 <code>messages</code> 列表，用 <code>MessageGraph</code> 可能更简洁。这个等我有实际对比经验之后再更新。</p>
+  </section>
+
+  <hr />
+
+  <section id="state-in-practice">
+    <h2>6. 实际写代码时的几个观察</h2>
+    <p>以下是我在写代码过程中逐渐发现的几点，不一定对，仅供参考：</p>
+    <ul>
+      <li>
+        <strong>节点函数的签名是固定的。</strong>
+        每个节点函数接收当前 State，返回一个「部分 State」字典。这个设计一开始我觉得有点怪（为什么不是直接修改 State？），后来理解：返回部分 State + reducer 合并，避免了多个节点同时修改 State 带来的竞态问题。
+      </li>
+      <li>
+        <strong>State 的「当前值」在节点执行期间是不变的。</strong>
+        节点 A 读取到的 State，是图开始执行这个节点那一刻的快照。如果节点 B 和 A 并行执行，它们看到的 State 是同一个快照，互相不会影响。这个特性我还没有在实际项目里深度用到，但目前的理解是这样的。
+      </li>
+      <li>
+        <strong>调试时打印 State 很有用。</strong>
+        在每个节点函数开头加一句 <code>print(state)</code>，可以看到图执行到这一步时的完整状态。这比单纯看 LangSmith 的 trace 更直观（对我而言）。
+      </li>
+    </ul>
+  </section>
+
+  <hr />
+
+  <section id="summary">
+    <h2>7. 阶段性总结</h2>
+    <p>目前我对 State 的理解可以浓缩为几条：</p>
+    <ul>
+      <li>State 不是普通变量，它是图的「共享工作台」，所有节点通过它通信。</li>
+      <li><code>TypedDict</code> + <code>Annotated</code> 是标准写法，后者声明 reducer，决定字段怎么合并。</li>
+      <li><code>add_messages</code> 不是简单追加，而是按消息 <code>id</code> 智能合并（覆盖或追加）。</li>
+      <li>没声明 reducer 的字段，最后一次写入生效（覆盖）。这个行为要特别小心。</li>
+      <li><code>MessageGraph</code> 是 <code>StateGraph</code> 的特化版本，适合纯对话场景，但我还没对比过两者的实际差异。</li>
+    </ul>
+  </section>
+
+  <div style="margin-top:48px;padding-top:32px;border-top:1px solid #1e293b;display:flex;flex-wrap:wrap;gap:16px;font-size:0.875rem;">
+    <a href="../langgraph/index.html" style="color:#60a5fa;">&larr; 上一篇：LangGraph 学习记录</a>
+    <a href="../index.html" style="color:#94a3b8;">返回 Agent 笔记索引</a>
+    <a href="../router-tool-calling/index.html" style="color:#60a5fa;">下一篇：Router &amp; Tool Calling Agent &rarr;</a>
+  </div>
+
+</div>
+
+</body>
+</html>
