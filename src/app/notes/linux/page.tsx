@@ -639,7 +639,7 @@ export default function NotesLinux() {
 
       {/* body: sidebar + content */}
       <div className="max-w-6xl mx-auto px-6 py-12">
-        <div className="flex gap-10 items-start">
+        <div className="flex gap-10">
           <Sidebar activeChapter={activeChapter} activeSection={activeSection} onNav={handleNav} />
 
           {/* content */}

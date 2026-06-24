@@ -2,6 +2,9 @@
 
 import { useRouter } from 'next/navigation'
 import { useState, useEffect, useRef, useCallback } from 'react'
+import CustomCursor from '@/components/CustomCursor'
+import MouseGlow from '@/components/MouseGlow'
+import ConsoleEgg from '@/components/ConsoleEgg'
 
 /* ══════════════════════════════════════════════════
    Chapter metadata
@@ -1355,6 +1358,9 @@ export default function AgentNotesPage() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
+      <ConsoleEgg />
+      <CustomCursor />
+      <MouseGlow />
       {/* sticky header */}
       <header className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-sm border-b border-slate-800">
         <div className="max-w-[1200px] mx-auto px-6 py-4 flex items-center gap-4">
@@ -1370,7 +1376,7 @@ export default function AgentNotesPage() {
       </header>
 
       {/* body: sidebar + content */}
-      <div className="max-w-[1200px] mx-auto px-6 py-12 flex gap-10 items-start">
+      <div className="max-w-[1200px] mx-auto px-6 py-12 flex gap-10">
         <Sidebar activeChapter={activeChapter} activeSection={activeSection} onNav={handleNav} />
 
         {/* content */}

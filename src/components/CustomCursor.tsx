@@ -16,6 +16,8 @@ export default function CustomCursor() {
     // 移动端不启用
     if (window.matchMedia('(hover: none)').matches) return
 
+    document.body.classList.add('has-custom-cursor')
+
     const dot = dotRef.current!
     const ring = ringRef.current!
     let mouseX = 0, mouseY = 0
@@ -74,6 +76,7 @@ export default function CustomCursor() {
     document.addEventListener('mouseenter', onEnter)
 
     return () => {
+      document.body.classList.remove('has-custom-cursor')
       document.removeEventListener('mousemove', onMove)
       document.removeEventListener('mouseleave', onLeave)
       document.removeEventListener('mouseenter', onEnter)

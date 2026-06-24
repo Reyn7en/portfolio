@@ -84,7 +84,7 @@ section[id] {
 
 /* ── Custom Cursor ────────────────────────── */
 @media (hover: hover) {
-  * { cursor: none !important; }
+  body.has-custom-cursor * { cursor: none !important; }
 
   .cursor-dot {
     width: 8px; height: 8px;
