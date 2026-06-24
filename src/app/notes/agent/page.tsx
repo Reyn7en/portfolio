@@ -36,7 +36,7 @@ const chapters: Chapter[] = [
     title: 'State 深入',
     desc: 'add_messages、Reducer 与 StateGraph 选型',
     sections: [
-      { id: 'st-why', title: '哪些坑逼我重学 State' },
+      { id: 'st-why', title: '踩坑实录：重新理解 State' },
       { id: 'st-typeddict', title: 'TypedDict + Annotated 标准写法' },
       { id: 'st-add-messages', title: 'add_messages 到底在做什么' },
       { id: 'st-reducer', title: 'Reducer：多节点写入同一字段怎么办' },
@@ -345,7 +345,7 @@ function ChapterLanggraph() {
 
 function ChapterState() {
   return <>
-    <H2 id="st-why">1. 哪些坑逼我重学 State</H2>
+    <H2 id="st-why">1. 踩坑实录：重新理解 State</H2>
     <P>在第一篇笔记里，我把 State 概括为「Agent 的共享工作台」。这个说法够用，但真正写代码的时候会发现：State 怎么定义、怎么更新、多个节点怎么安全地读写，这些细节直接决定图能不能跑通。</P>
     <P>我一开始的理解是：「State 就是一个字典，节点往里面塞东西就行」。后来踩了几次坑才发现，LangGraph 的 State 设计有一套明确的规则，不理解这些规则，图的行为会和你预期的不一样。</P>
 
