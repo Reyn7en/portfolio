@@ -26,30 +26,17 @@ export default function Contact() {
   return (
     <section id="contact" className="py-24 px-6 max-w-5xl mx-auto">
       <div className="mb-12">
-        <p className="text-blue-400 font-mono text-sm mb-2">{'// 05. contact'}</p>
-        <h2 className="text-3xl md:text-4xl font-bold text-white">联系方式</h2>
+        <p className="text-blue-400 font-mono text-sm mb-2">{'// 05. links'}</p>
+        <h2 className="text-3xl md:text-4xl font-bold text-white">找到我</h2>
         <div className="w-16 h-1 bg-blue-600 rounded mt-3" />
       </div>
 
       <div className="grid md:grid-cols-2 gap-12 items-start">
         {/* Text */}
         <div>
-          <p className="text-slate-300 leading-relaxed mb-6">
-            如果你对 AI 应用开发、智能调度、工程实践方向感兴趣，
-            或有实习 / 合作机会，欢迎通过以下方式联系。
+          <p className="text-slate-300 leading-relaxed mb-8">
+            欢迎通过以下链接找到我，交流技术或合作机会。
           </p>
-
-          {/* Resume download */}
-          <a
-            href="/resume.pdf"
-            download
-            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg transition-all duration-200 shadow-lg shadow-blue-900/30 hover:shadow-blue-800/40"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            下载简历 (PDF)
-          </a>
         </div>
 
         {/* Contact cards */}
