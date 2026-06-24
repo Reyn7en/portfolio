@@ -250,7 +250,7 @@
 
 <h2 class="section-h2" id="lg-why">1. 为什么学 LangGraph</h2>
 <p class="text-p">在接触 LangGraph 之前，我对 Agent 的理解就是简单的 LLM 调用：扔一个 prompt，拿回结果，完事。这在单轮问答场景下没问题，但一旦涉及多轮对话、工具调用、条件分支，这种简单模式就撑不住了。</p>
-<p class="text-p">我在 deeplearning.ai 课程中第一次看到 LangGraph 时，最大的感受是：<span class="text-strong">它把 Agent 的工作流变得显式可读了。</span>Agent 不只是"调 LLM + 解析输出"，而是一个多步骤的工作流——每一步有明确的输入输出，步骤之间有条件跳转，中间状态需要被保存和追踪。</p>
+<p class="text-p">接触 LangGraph 后，最大的感受是：<span class="text-strong">它把 Agent 的工作流变得显式可读了。</span>Agent 不只是"调 LLM + 解析输出"，而是一个多步骤的工作流——每一步有明确的输入输出，步骤之间有条件跳转，中间状态需要被保存和追踪。</p>
 <p class="text-p">对我来说，LangGraph 解决了一个核心问题：<span class="text-strong">如何让 Agent 的行为可控、可追踪、可中断。</span>这在涉及工具调用和多步推理的场景中尤为关键。</p>
 
 <h2 class="section-h2" id="lg-overview">2. 我对 LangGraph 的整体理解</h2>
@@ -407,7 +407,7 @@ for event in events:
 <p class="text-p">我一开始的理解是：「State 就是一个字典，节点往里面塞东西就行」。后来踩了几次坑才发现，LangGraph 的 State 设计有一套明确的规则，不理解这些规则，图的行为会和你预期的不一样。</p>
 
 <h2 class="section-h2" id="st-typeddict">2. TypedDict + Annotated：State 的标准写法</h2>
-<p class="text-p">课程里推荐的 State 定义方式是 <code class="text-code">TypedDict</code> + <code class="text-code">Annotated</code>。我之前不太理解为什么要搞这么复杂，直接用 <code class="text-code">dict</code> 不行吗？</p>
+<p class="text-p">LangGraph 推荐的 State 定义方式是 <code class="text-code">TypedDict</code> + <code class="text-code">Annotated</code>。起初不太理解为什么要搞这么复杂，直接用 <code class="text-code">dict</code> 不行吗？</p>
 <p class="text-p">后来意识到，LangGraph 需要回答两个问题：</p>
 <ul class="list-ul">
   <li>State 里有哪些字段？（类型检查、IDE 补全）</li>
@@ -443,7 +443,7 @@ class AgentState(TypedDict):
 <div class="note-box">这个坑让我意识到：LangGraph 不会自动帮你「合并」任何东西，除非你显式声明 reducer。</div>
 
 <h2 class="section-h2" id="st-messagegraph">5. MessageGraph vs StateGraph：该用哪个？</h2>
-<p class="text-p">课程里提到了 <code class="text-code">MessageGraph</code>，这是一个专门针对「消息列表」场景的简化版 StateGraph。我目前的理解是：</p>
+<p class="text-p">LangGraph 还提供了 <code class="text-code">MessageGraph</code>，这是一个专门针对「消息列表」场景的简化版 StateGraph。两者的区别：</p>
 <ul class="list-ul">
   <li><code class="text-code">MessageGraph</code>：State 只有一个 <code class="text-code">messages</code> 字段，适合纯对话场景，写法更简洁</li>
   <li><code class="text-code">StateGraph</code>：State 可以有任意多个字段，适合需要管理多种状态（消息、步骤计数、检索结果、工具输出等）的场景</li>
@@ -507,7 +507,7 @@ graph.add_conditional_edges(
     }
 )</div>
 <p class="text-p">关键点：<code class="text-code">router_function</code> 接收当前 State，返回一个<span class="text-strong">字符串</span>（下一个节点的名称）。LangGraph 根据这个返回值决定图的下一步走向。</p>
-<div class="note-box">我目前只写过简单的 router_function（基于关键词匹配）。课程里提到可以让 LLM 来生成这个路由判断，这个我还没实践过，后续学到 ReAct 部分应该会深入。</div>
+<div class="note-box">我目前只写过简单的 router_function（基于关键词匹配）。也可以让 LLM 来生成这个路由判断，这个我还没实践过，后续学到 ReAct 部分会深入。</div>
 
 <h2 class="section-h2" id="rt-structured-output">3. 结构化输出：让路由判断更可靠</h2>
 <p class="text-p">如果让 LLM 自由文本输出「该走哪条路」，解析起来很不稳定。更好的方式是：<span class="text-strong">强制 LLM 输出结构化结果</span>（比如 JSON，或者 Pydantic 模型）。</p>
@@ -692,14 +692,14 @@ for chunk in agent.stream(
 <p class="text-p">我目前的体会：<code class="text-code">stream_mode="messages"</code> 最适合和用户交互的场景。<code class="text-code">"values"</code> 更适合调试，因为你能看到每一步完整的 State。</p>
 
 <h2 class="section-h2" id="rl-termination">5. 终止条件：Agent 什么时候停</h2>
-<p class="text-p">ReAct Agent 的终止条件其实很朴素：<span class="text-strong">LLM 不再输出 tool_calls，而是输出普通文本</span>。此时 <code class="text-code">create_react_agent</code> 内部的循环就结束了。</p>
+<p class="text-p">ReAct Agent 的终止条件很朴素：<span class="text-strong">LLM 不再输出 tool_calls，而是输出普通文本</span>。此时 <code class="text-code">create_react_agent</code> 内部的循环就结束了。</p>
 <p class="text-p">但有些边界情况需要小心：</p>
 <ul class="list-ul">
   <li>LLM 陷入死循环（一直输出 tool_calls，但每次结果都一样）→ 需要设最大步数限制</li>
   <li>工具执行失败，LLM 不知道怎么处理 → 需要在 State 里加入错误信息，让 LLM 有机会调整</li>
   <li>LLM 「觉得」任务完成了，但实际没完成 → 需要在系统提示里强调完成标准</li>
 </ul>
-<div class="note-box">我目前没有在实际项目里遇到死循环问题。课程里提到了 <code class="text-code">max_iterations</code> 参数，但我还没用过。后续实践后再补充。</div>
+<div class="note-box">我目前没有在实际项目里遇到死循环问题。LangGraph 提供了 <code class="text-code">max_iterations</code> 参数来设上限，但我还没用过。后续实践后再补充。</div>
 
 <h2 class="section-h2" id="rl-vs-tool-calling">6. ReAct Agent vs Tool Calling Agent：什么时候用哪个</h2>
 <p class="text-p">我目前的判断标准：</p>
@@ -842,7 +842,7 @@ def my_node(state, config):
       <div class="ch-panel-body">
 
 <h2 class="section-h2" id="hl-why">1. 什么时候必须让用户介入</h2>
-<p class="text-p">从课程视频里了解到，LangGraph 的核心理念之一是把 Agent 的每一步都变成<span class="text-strong">显式的、可中断的、可恢复的</span>。这和传统 Agent 框架很不一样——很多框架把 LLM 的推理过程封装成一个黑盒，你想让人审一下再执行，往往要在 prompt 层面 hack，非常不优雅。</p>
+<p class="text-p">LangGraph 的核心理念之一是把 Agent 的每一步都变成<span class="text-strong">显式的、可中断的、可恢复的</span>。这和传统 Agent 框架很不一样——很多框架把 LLM 的推理过程封装成一个黑盒，你想让人审一下再执行，往往要在 prompt 层面 hack，非常不优雅。</p>
 <p class="text-p">实际场景里，有几类情况你必须让人介入：</p>
 <ul class="list-ul">
   <li><span class="text-strong">高风险操作</span>：发邮件、转账、删除数据——执行前必须人工确认。</li>
@@ -868,13 +868,13 @@ def human_approval_node(state: State) -> dict:
     # 恢复后，approval 里包含了人工的输入
     return {"approved": approval["approved"], "comment": approval["comment"]}</div>
 <p class="text-p">关键点：<code class="text-code">interrupt()</code> 接收的参数会被原封不动地返回给调用方（通常是你的后端 API 或前端）。调用方拿到这个信息后，展示给人工，收集输入，再通过 <code class="text-code">Command</code> 恢复图。</p>
-<p class="text-p">在课程示例里，中断的典型位置有两个：</p>
+<p class="text-p">中断的典型位置有两个：</p>
 <ul class="list-ul">
   <li><span class="text-strong">interrupt_before</span>：在某个关键节点<span class="text-strong">执行前</span>中断（比如发邮件工具调用前）。</li>
   <li><span class="text-strong">interrupt_after</span>：在某个节点执行完后、下一个节点开始前中断（比如模型生成了回复草稿，让人审核后再发）。</li>
 </ul>
 <p class="text-p">实际上 API 层面就是一个 <code class="text-code">interrupt()</code> 调用，放在节点函数的合适位置就行。「before/after」是你放的位置不同，不是两个不同函数。</p>
-<div class="note-box">我一开始以为 <code class="text-code">interrupt</code> 会抛异常或者改 State，其实都不会。它更像是一个「协程 yield」——把控制权交还给调用方，State 保持不变，等恢复时从 <code class="text-code">interrupt</code> 调用后的下一行继续执行。</div>
+<div class="note-box"><code class="text-code">interrupt</code> 并不会抛异常或修改 State。它更像是一个「协程 yield」——把控制权交还给调用方，State 保持不变，等恢复时从 <code class="text-code">interrupt</code> 调用后的下一行继续执行。</div>
 
 <h2 class="section-h2" id="hl-command">3. Command：恢复执行与注入人工输入</h2>
 <p class="text-p">中断后怎么恢复？用 <code class="text-code">Command</code>。它是 LangGraph 提供的另一个特殊类型，用来向图中<span class="text-strong">注入外部输入并指定恢复位置</span>。</p>
@@ -894,10 +894,10 @@ def resume_graph(thread_id: str, approved: bool, comment: str):
     result = app.invoke(command, config={"configurable": {"thread_id": thread_id}})
     return result</div>
 <p class="text-p">这里有一个我初学时容易混淆的点：<code class="text-code">Command</code> 的 <code class="text-code">goto</code> 指定的是「恢复后从哪个节点继续执行」，而 <code class="text-code">update</code> 是直接 merge 进当前 State 的数据。恢复后，节点函数从 <code class="text-code">interrupt()</code> 调用后的那行继续跑，同时 State 里已经有了人工输入的数据。</p>
-<p class="text-p">课程里特别强调：<span class="text-strong">恢复时不需要从头重跑</span>。Checkpointer 已经把中断前的完整 State 存好了，恢复时 LangGraph 会从断点继续，之前的节点不会重复执行。这对长链路 Agent 来说非常重要——你不会想让人审批一次就把前面 10 步全部重跑一遍。</p>
+<p class="text-p"><span class="text-strong">恢复时不需要从头重跑</span>。Checkpointer 已经把中断前的完整 State 存好了，恢复时 LangGraph 会从断点继续，之前的节点不会重复执行。这对长链路 Agent 来说非常重要——你不会想让人审批一次就把前面 10 步全部重跑一遍。</p>
 
 <h2 class="section-h2" id="hl-approval-flow">4. 审批流设计模式</h2>
-<p class="text-p">课程里给了一个比较完整的「邮件发送 Agent」作为 Human-in-the-Loop 的案例。我把它整理成一个可复用的设计模式。</p>
+<p class="text-p">以下是一个基于「邮件发送 Agent」场景的 Human-in-the-Loop 案例，整理成一个可复用的设计模式。</p>
 <p class="text-p"><span class="text-strong">模式：审批节点（Approval Node）</span></p>
 <ol class="list-ol">
   <li>模型生成一个「待审批操作」（比如邮件草稿），写入 State。</li>
@@ -917,7 +917,7 @@ def after_approval(state: State) -> str:
 # 在图里
 graph.add_conditional_edges("human_approval_node", after_approval)</div>
 <p class="text-p">这个模式的好处是：<span class="text-strong">审批逻辑是图的一个普通节点，不是特殊处理</span>。你可以对它做所有对普通节点能做的事——加工具调用、加条件边、在前面加一个 LLM 节点来「预处理」待审批内容。</p>
-<div class="note-box">课程里提到一个 trick：如果审批被拒绝，可以让图转到一个新的「重新规划」节点，让模型根据拒绝原因重新生成方案，而不是直接 END。这样 Agent 有自我修正的机会，体验更好。</div>
+<div class="note-box">一个实用的设计：如果审批被拒绝，可以让图转到一个新的「重新规划」节点，让模型根据拒绝原因重新生成方案，而不是直接 END。这样 Agent 有自我修正的机会，体验更好。</div>
 
 <h2 class="section-h2" id="hl-sensitive-ops">5. 敏感操作的安全实践</h2>
 <p class="text-p">学完这部分后我总结了几条实际写代码时需要注意的安全实践：</p>
@@ -928,7 +928,7 @@ graph.add_conditional_edges("human_approval_node", after_approval)</div>
   <li><span class="text-strong">超时处理。</span>如果人工一直不审批怎么办？需要设计超时机制（比如 10 分钟没响应自动拒绝或走备用流程）。</li>
   <li><span class="text-strong">审计日志。</span>每次中断 + 恢复都要记录日志（谁审批的、什么决策、时间戳），方便事后审计和 debug。</li>
 </ul>
-<p class="text-p">课程里有一个比较好的实践：把「待执行操作」和「执行结果」分开存在 State 里。中断时展示「待执行操作」，恢复后执行，执行完把结果写回 State。这样整个流程的记录是完整的，出了问题可以回溯。</p>
+<p class="text-p">推荐的做法是：把「待执行操作」和「执行结果」分开存在 State 里。中断时展示「待执行操作」，恢复后执行，执行完把结果写回 State。这样整个流程的记录是完整的，出了问题可以回溯。</p>
 
 <h2 class="section-h2" id="hl-checkpointer">6. 中断与 Checkpointer 的配合</h2>
 <p class="text-p">这一部分我在学的时候觉得是 LangGraph 设计最巧妙的地方之一：<span class="text-strong">interrupt 能工作，完全依赖 Checkpointer</span>。</p>
@@ -960,7 +960,7 @@ with SqliteSaver.from_conn_string("checkpoints.db") as saver:
 <p class="text-p">这个设计让我意识到：<span class="text-strong">Human-in-the-Loop 不是 LangGraph 的「附加功能」，而是和 Checkpointer 深度集成的核心能力</span>。没有持久化，Human-in-the-Loop 就只能做同步审批（人在 loop 里等着），有了持久化，可以做异步审批（发个链接，几小时后再回来继续）。</p>
 
 <h2 class="section-h2" id="hl-streaming">7. 流式输出下的人工介入</h2>
-<p class="text-p">这一部分课程讲得比较快，我结合自己的理解整理一下。</p>
+<p class="text-p">以下结合官方文档整理流式输出中人工介入的实现思路。</p>
 <ol class="list-ol">
   <li>模型正在流式输出一段文字……</li>
   <li>你在前端实时展示这段文字，同时用另一个模型或规则检测内容是否「不安全」。</li>
@@ -968,7 +968,7 @@ with SqliteSaver.from_conn_string("checkpoints.db") as saver:
   <li>前端弹出确认框：「模型正在生成可能不合适的内容，是否继续？」</li>
   <li>用户选择「停止」→ 图走到一个「安全终止」节点；选择「继续」→ 恢复流式输出。</li>
 </ol>
-<p class="text-p">课程里给的一个更简单的替代方案是：<span class="text-strong">不在流式过程中介入，而是在模型输出完成后、工具执行前介入</span>。这样实现简单很多，也能覆盖大多数场景。</p>
+<p class="text-p">一个更简单的替代方案是：<span class="text-strong">不在流式过程中介入，而是在模型输出完成后、工具执行前介入</span>。这样实现简单很多，也能覆盖大多数场景。</p>
 
 <h2 class="section-h2" id="hl-summary">8. 小结</h2>
 <ul class="list-ul">
@@ -977,9 +977,9 @@ with SqliteSaver.from_conn_string("checkpoints.db") as saver:
   <li>审批流设计：审批节点是普通节点，用条件边根据审批结果决定下一步走向。</li>
   <li>中断 + Checkpointer 配合，支持异步审批（跨进程、跨时间）。</li>
   <li>敏感操作的安全实践：执行前中断、结构化中断信息、恢复时校验输入、记录审计日志。</li>
-  <li>流式输出中的实时介入比较 tricky，课程建议改成「输出完成后介入」更简单。</li>
+  <li>流式输出中的实时介入实现较复杂，建议改成「输出完成后介入」更简单。</li>
 </ul>
-<div class="note-box">这一篇没有「未搞清楚的问题」章节——因为课程这一部分讲得比较完整，我目前没有特别大的疑问。如果后续实践中遇到坑，会回来补充。</div>
+<div class="note-box">Human-in-the-Loop 的概念体系已比较清晰。如果后续实践中遇到坑，会回来补充。</div>
 
       </div>
     </div>
@@ -994,7 +994,7 @@ with SqliteSaver.from_conn_string("checkpoints.db") as saver:
       <div class="ch-panel-body">
 
 <h2 class="section-h2" id="ma-why">1. 单 Agent 的天花板在哪</h2>
-<p class="text-p">在学这部分之前，我写的 Agent 都是「单兵作战」：一个图，一个 LLM，一把工具。但课程里提到，当任务复杂度上去之后，单体 Agent 会遇到几个天花板：</p>
+<p class="text-p">在接触 Multi-Agent 架构之前，我写的 Agent 都是「单兵作战」：一个图，一个 LLM，一把工具。但当任务复杂度上升之后，单体 Agent 会遇到几个天花板：</p>
 <ul class="list-ul">
   <li><span class="text-strong">Prompt 太长、太杂。</span>一个 Agent 既要懂代码，又要懂法律，还要懂金融——prompt 塞不下，效果也差。</li>
   <li><span class="text-strong">工具太多，选择困难。</span>给一个 Agent 绑 30 个工具，它经常选错或者用错参数。</li>
@@ -1002,7 +1002,7 @@ with SqliteSaver.from_conn_string("checkpoints.db") as saver:
   <li><span class="text-strong">无法并行。</span>单体 Agent 本质上是串行的，多个子任务无法同时推进。</li>
 </ul>
 <p class="text-p">Multi-Agent 的思路是：<span class="text-strong">把复杂任务拆给多个专门化的 Agent，每个 Agent 只管自己擅长的事</span>。就像软件工程里的「单一职责原则」，Agent 也该如此。</p>
-<div class="note-box">课程里 Harrison Chase 的一句话印象很深：「Agent 的边界应该和人类的角色边界对齐」。一个研究团队里有研究员、有工程师、有项目经理，Agent 团队也该这样分工。</div>
+<div class="note-box">Harrison Chase 曾指出：「Agent 的边界应该和人类的角色边界对齐」。一个研究团队里有研究员、有工程师、有项目经理，Agent 团队也该这样分工。</div>
 
 <h2 class="section-h2" id="ma-supervisor">2. Supervisor 模式</h2>
 <p class="text-p"><span class="text-strong">Supervisor（监督者）模式</span>是 Multi-Agent 最直观的架构：一个中央 Agent（Supervisor）负责任务分发和结果汇总，多个 Worker Agent 负责具体执行。</p>
@@ -1064,7 +1064,7 @@ root_graph = StateGraph(RootState)
 root_graph.add_node("backend_lead", backend_lead_graph.compile())
 root_graph.add_node("frontend_lead", frontend_lead_graph.compile())
 # ...</div>
-<div class="note-box">课程里提到：分层不是越深越好。2-3 层通常够用，再深了调试和状态管理会变得非常复杂。我目前觉得 2 层（总控 + 执行）对大多数场景已经足够。</div>
+<div class="note-box">分层不是越深越好。2-3 层通常够用，再深了调试和状态管理会变得非常复杂。目前来看 2 层（总控 + 执行）对大多数场景已经足够。</div>
 
 <h2 class="section-h2" id="ma-peer-collab">4. 平级协作模式</h2>
 <p class="text-p">不是所有 Multi-Agent 都需要层级结构。<span class="text-strong">平级协作（Peer Collaboration）</span>模式里，多个 Agent 地位平等，通过「消息传递」或「共享状态」来协作。</p>
@@ -1088,7 +1088,7 @@ root_graph.add_node("frontend_lead", frontend_lead_graph.compile())
 <ol class="list-ol">
   <li><span class="text-strong">LLM 路由（智能路由）</span>：用一个「小型、快速」的 LLM，输入任务描述，输出最优 Agent 名称。灵活，能处理未见过的任务类型，但有延迟和成本。</li>
   <li><span class="text-strong">规则路由（Deterministic Routing）</span>：用关键词匹配、正则表达式或者向量相似度来路由。快，零 LLM 调用，但只能处理预设的场景。</li>
-  <li><span class="text-strong">混合路由</span>：先走规则路由，规则匹配不上的再走 LLM 路由。课程里推荐这种，兼顾效率和覆盖率。</li>
+  <li><span class="text-strong">混合路由</span>：先走规则路由，规则匹配不上的再走 LLM 路由。推荐这种混合方式，兼顾效率和覆盖率。</li>
 </ol>
 <div class="note-box">我自己的实践经验（虽然还不多）：路由 LLM 不需要用最强的模型，用 GPT-3.5 / GLM-4-Flash 这类又快又便宜的模型做路由完全够用。</div>
 
@@ -1133,7 +1133,7 @@ root_graph.add_node("frontend_lead", frontend_lead_graph.compile())
   <li><span class="text-strong">无法利用工具。</span>用户问「帮我对比 A 和 B 两个文档里的数据」，单次检索只能看到一个视角。</li>
 </ul>
 <p class="text-p"><span class="text-strong">Agentic RAG</span> 的思路是：<span class="text-strong">把检索本身变成一个可由 Agent 调度、反思、重试的工具</span>，而不只是 pipeline 里的一个固定步骤。</p>
-<div class="note-box">课程里反复强调一个观点：RAG 的本质是「给 LLM 提供外部知识」，Agent 的本质是「让 LLM 自主决定下一步做什么」。两者结合后，LLM 可以自主决定「我还需要查更多资料」、「刚才查的不对，换个 query 再查」。</div>
+<div class="note-box">RAG 的本质是「给 LLM 提供外部知识」，Agent 的本质是「让 LLM 自主决定下一步做什么」。两者结合后，LLM 可以自主决定「我还需要查更多资料」、「刚才查的不对，换个 query 再查」。</div>
 
 <h2 class="section-h2" id="ra-agentic-rag">2. Agentic RAG vs Naive RAG</h2>
 <div class="table-wrap">
@@ -1154,7 +1154,7 @@ root_graph.add_node("frontend_lead", frontend_lead_graph.compile())
   </tbody>
 </table>
 </div>
-<p class="text-p">课程里给的一个关键设计：<span class="text-strong">Agentic RAG 里，检索是一个 Tool，不是 pipeline 的前置步骤</span>。这意味着 Agent 可以在任意时刻调用检索，甚至多次调用不同检索工具（向量库检索 + 网页搜索 + SQL 查询）后综合结果。</p>
+<p class="text-p">关键设计是：<span class="text-strong">Agentic RAG 里，检索是一个 Tool，不是 pipeline 的前置步骤</span>。这意味着 Agent 可以在任意时刻调用检索，甚至多次调用不同检索工具（向量库检索 + 网页搜索 + SQL 查询）后综合结果。</p>
 
 <h2 class="section-h2" id="ra-tool-design">3. 检索工具的设计与暴露</h2>
 <div class="pre-block">@tool
@@ -1186,7 +1186,7 @@ graph.add_conditional_edges("tools", should_continue)</div>
   <li><span class="text-strong">返回格式要稳定。</span>返回 list of dict 比返回一段拼接文本好——下游节点可以更灵活地使用每个文档的 metadata。</li>
   <li><span class="text-strong">考虑返回空结果的情况。</span>检索不到相关文档时，返回空列表 + 一个标志位，让 LLM 有机会决定「要不要换个 query 再查一次」或者「改用网页搜索」。</li>
 </ol>
-<div class="note-box">我自己的体会：工具描述是检索工具设计里最值得花时间调的部分。课程里 Harrison 演示了一个例子——改了工具的 docstring 之后，Agent 调用检索工具的准确率明显提升了。</div>
+<div class="note-box">工具描述是检索工具设计里最值得花时间调的部分。譬如，Harrison 演示过一个例子——改了工具的 docstring 之后，Agent 调用检索工具的准确率明显提升了。</div>
 
 <h2 class="section-h2" id="ra-multi-step">4. 多步检索与自我纠错</h2>
 <p class="text-p">这是 Agentic RAG 最有价值的部分：<span class="text-strong">Agent 可以根据第一次检索的结果，决定是否需要进一步检索</span>。</p>
@@ -1222,10 +1222,10 @@ graph.set_entry_point("retrieve")</div>
         return {"next_step": "synthesize_answer"}
     else:
         return {"next_step": "retrieve_more"}</div>
-<p class="text-p">这种写法的好处：<span class="text-strong">模型可以基于检索结果的质量动态决定下一步</span>，而不是靠一个固定规则。课程里提到，这比 Naive RAG 的准确率高不少，尤其是在需要多视角信息的复杂问题上。</p>
+<p class="text-p">这种写法的好处：<span class="text-strong">模型可以基于检索结果的质量动态决定下一步</span>，而不是靠一个固定规则。这比 Naive RAG 的准确率高不少，尤其是在需要多视角信息的复杂问题上。</p>
 
 <h2 class="section-h2" id="ra-end-to-end">5. 端到端综合案例</h2>
-<p class="text-p">课程最后给了一个比较完整的「研究助手 Agent」案例：用户抛一个研究性问题（比如「对比 LangChain 和 LangGraph 在 Agent 构建上的差异」），Agent 自动完成多源检索、信息综合、答案生成。</p>
+<p class="text-p">以下是一个综合案例：研究助手 Agent（比如「对比 LangChain 和 LangGraph 在 Agent 构建上的差异」），Agent 自动完成多源检索、信息综合、答案生成。</p>
 <p class="text-p"><span class="text-strong">图的节点设计</span>：</p>
 <ol class="list-ol">
   <li><span class="text-strong">query_rewrite</span>：把用户的自然语言问题，改写成更适合向量检索的 query（可能分解成多个 sub-query）。</li>
@@ -1279,7 +1279,7 @@ graph.add_edge("synthesize_answer", END)</div>
   <li><span class="text-strong">检索步数</span>：平均需要几次检索才能给出答案（越少越好，但和准确率需要平衡）。</li>
   <li><span class="text-strong">工具调用正确率</span>：Agent 是否在合适的时机调用了合适的工具。</li>
 </ul>
-<p class="text-p">我目前觉得最实用的评估方式是：<span class="text-strong">用一组固定 test case，每次改了 prompt / 工具描述 / 检索参数后，跑一遍所有 case，对比答案质量和检索步数</span>。不需要很复杂的评估框架，暴力但有效。</p>
+<p class="text-p">目前来看，最实用的评估方式是：<span class="text-strong">用一组固定 test case，每次改了 prompt / 工具描述 / 检索参数后，跑一遍所有 case，对比答案质量和检索步数</span>。不需要很复杂的评估框架，暴力但有效。</p>
 
 <h2 class="section-h2" id="ra-summary">8. 小结</h2>
 <ul class="list-ul">
