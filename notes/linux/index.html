@@ -62,16 +62,13 @@
   .ch-panel-header .ch-label { font-family: monospace; font-size: 0.75rem; color: #60a5fa; display: block; }
   .ch-panel-header .ch-title { font-size: 1rem; font-weight: 600; color: #fff; }
   .ch-panel-body { padding: 0 20px 24px; }
-  .ch-pending { display: none; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; margin-bottom: 24px; opacity: 0.4; }
-  .ch-pending.visible { display: block; }
-  .ch-pending .ch-panel-header { opacity: 0.6; }
-  .ch-pending-text { padding: 0 20px 20px; font-size: 0.875rem; color: #475569; }
 
   /* typography */
   .section-h2 { font-size: 1.25rem; font-weight: 700; color: #fff; margin-top: 48px; margin-bottom: 16px; scroll-margin-top: 112px; padding-bottom: 8px; border-bottom: 1px solid #1e293b; }
   .section-h3 { font-size: 1rem; font-weight: 600; color: #e2e8f0; margin-top: 24px; margin-bottom: 8px; }
   .text-p { font-size: 0.9375rem; color: #94a3b8; line-height: 1.7; margin-bottom: 12px; }
   .text-code { padding: 2px 6px; border-radius: 4px; background: #1e293b; color: #93c5fd; font-size: 0.85em; font-family: monospace; }
+  .text-code-b { padding: 2px 6px; border-radius: 4px; background: #1e293b; color: #93c5fd; font-size: 0.85em; font-family: monospace; font-weight: 700; }
   .pre-block { background: rgba(30,41,59,0.8); border: 1px solid rgba(51,65,85,0.6); border-radius: 8px; padding: 16px; overflow-x: auto; font-size: 0.875rem; font-family: 'Consolas','Monaco',monospace; color: #cbd5e1; line-height: 1.6; margin: 16px 0; white-space: pre; }
   .note-box { background: rgba(30,58,138,0.15); border: 1px solid rgba(30,64,175,0.4); border-radius: 8px; padding: 12px 16px; margin: 16px 0; font-size: 0.875rem; color: #93c5fd; line-height: 1.7; }
   .warn-box { background: rgba(113,63,18,0.1); border: 1px solid rgba(161,98,7,0.3); border-radius: 8px; padding: 12px 16px; margin: 16px 0; font-size: 0.875rem; color: #fde047; line-height: 1.7; }
@@ -106,6 +103,7 @@
   <aside class="sidebar" id="sidebar">
     <p class="sidebar-title">目录</p>
     <nav>
+      <!-- Ch1: WSL2 -->
       <div class="sidebar-ch">
         <button class="sidebar-ch-title active" data-chapter="wsl2-setup"><span class="label active-label">第一章</span>WSL2 & Ubuntu 开发环境搭建</button>
         <button class="sidebar-sub active" data-chapter="wsl2-setup" data-section="wsl2-intro">WSL2 是什么、为什么用</button>
@@ -115,12 +113,58 @@
         <button class="sidebar-sub" data-chapter="wsl2-setup" data-section="dev-tools">开发工具链安装</button>
         <button class="sidebar-sub" data-chapter="wsl2-setup" data-section="wsl2-issues">常见问题 & 踩坑</button>
       </div>
-      <div class="sidebar-ch"><button class="sidebar-ch-title pending" data-chapter="commands"><span class="label dim">第二章</span>常用命令速查</button></div>
-      <div class="sidebar-ch"><button class="sidebar-ch-title pending" data-chapter="shell"><span class="label dim">第三章</span>Shell 脚本与自动化</button></div>
-      <div class="sidebar-ch"><button class="sidebar-ch-title pending" data-chapter="terminal"><span class="label dim">第四章</span>终端工具链配置</button></div>
-      <div class="sidebar-ch"><button class="sidebar-ch-title pending" data-chapter="ssh"><span class="label dim">第五章</span>SSH 远程开发与服务器运维</button></div>
-      <div class="sidebar-ch"><button class="sidebar-ch-title pending" data-chapter="monitoring"><span class="label dim">第六章</span>性能监控与调优</button></div>
-      <div class="sidebar-ch"><button class="sidebar-ch-title pending" data-chapter="docker"><span class="label dim">第七章</span>Docker 基础与实践</button></div>
+      <!-- Ch2: Commands -->
+      <div class="sidebar-ch">
+        <button class="sidebar-ch-title" data-chapter="commands"><span class="label dim">第二章</span>常用命令速查</button>
+        <button class="sidebar-sub" data-chapter="commands" data-section="cmd-file" style="display:none">文件与目录操作</button>
+        <button class="sidebar-sub" data-chapter="commands" data-section="cmd-view" style="display:none">文件查看与编辑</button>
+        <button class="sidebar-sub" data-chapter="commands" data-section="cmd-perm" style="display:none">权限管理</button>
+        <button class="sidebar-sub" data-chapter="commands" data-section="cmd-proc" style="display:none">进程管理</button>
+        <button class="sidebar-sub" data-chapter="commands" data-section="cmd-net" style="display:none">网络诊断</button>
+        <button class="sidebar-sub" data-chapter="commands" data-section="cmd-text" style="display:none">文本处理三剑客</button>
+      </div>
+      <!-- Ch3: Shell -->
+      <div class="sidebar-ch">
+        <button class="sidebar-ch-title" data-chapter="shell"><span class="label dim">第三章</span>Shell 脚本与自动化</button>
+        <button class="sidebar-sub" data-chapter="shell" data-section="shell-basics" style="display:none">基础语法速览</button>
+        <button class="sidebar-sub" data-chapter="shell" data-section="shell-ctrl" style="display:none">条件判断与循环</button>
+        <button class="sidebar-sub" data-chapter="shell" data-section="shell-func" style="display:none">函数与参数</button>
+        <button class="sidebar-sub" data-chapter="shell" data-section="shell-cases" style="display:none">实用脚本案例</button>
+        <button class="sidebar-sub" data-chapter="shell" data-section="shell-cron" style="display:none">定时任务 cron</button>
+      </div>
+      <!-- Ch4: Terminal -->
+      <div class="sidebar-ch">
+        <button class="sidebar-ch-title" data-chapter="terminal"><span class="label dim">第四章</span>终端工具链配置</button>
+        <button class="sidebar-sub" data-chapter="terminal" data-section="term-zsh" style="display:none">Zsh + Oh My Zsh 配置</button>
+        <button class="sidebar-sub" data-chapter="terminal" data-section="term-tmux" style="display:none">Tmux 会话管理</button>
+        <button class="sidebar-sub" data-chapter="terminal" data-section="term-plugins" style="display:none">常用插件推荐</button>
+      </div>
+      <!-- Ch5: SSH -->
+      <div class="sidebar-ch">
+        <button class="sidebar-ch-title" data-chapter="ssh"><span class="label dim">第五章</span>SSH 远程开发与服务器运维</button>
+        <button class="sidebar-sub" data-chapter="ssh" data-section="ssh-basics" style="display:none">SSH 基础与密钥登录</button>
+        <button class="sidebar-sub" data-chapter="ssh" data-section="ssh-config" style="display:none">SSH Config 简化连接</button>
+        <button class="sidebar-sub" data-chapter="ssh" data-section="ssh-tunnel" style="display:none">端口转发与隧道</button>
+        <button class="sidebar-sub" data-chapter="ssh" data-section="ssh-vscode" style="display:none">VSCode Remote SSH</button>
+        <button class="sidebar-sub" data-chapter="ssh" data-section="ssh-transfer" style="display:none">文件传输与同步</button>
+      </div>
+      <!-- Ch6: Monitoring -->
+      <div class="sidebar-ch">
+        <button class="sidebar-ch-title" data-chapter="monitoring"><span class="label dim">第六章</span>性能监控与调优</button>
+        <button class="sidebar-sub" data-chapter="monitoring" data-section="mon-cpu-mem" style="display:none">CPU 与内存监控</button>
+        <button class="sidebar-sub" data-chapter="monitoring" data-section="mon-gpu" style="display:none">GPU 监控 (nvidia-smi)</button>
+        <button class="sidebar-sub" data-chapter="monitoring" data-section="mon-disk" style="display:none">磁盘与 IO</button>
+        <button class="sidebar-sub" data-chapter="monitoring" data-section="mon-limit" style="display:none">资源限制</button>
+      </div>
+      <!-- Ch7: Docker -->
+      <div class="sidebar-ch">
+        <button class="sidebar-ch-title" data-chapter="docker"><span class="label dim">第七章</span>Docker 基础与实践</button>
+        <button class="sidebar-sub" data-chapter="docker" data-section="docker-concepts" style="display:none">核心概念</button>
+        <button class="sidebar-sub" data-chapter="docker" data-section="docker-cmds" style="display:none">常用命令</button>
+        <button class="sidebar-sub" data-chapter="docker" data-section="docker-df" style="display:none">Dockerfile 编写</button>
+        <button class="sidebar-sub" data-chapter="docker" data-section="docker-compose" style="display:none">Docker Compose</button>
+        <button class="sidebar-sub" data-chapter="docker" data-section="docker-dl" style="display:none">深度学习容器化实践</button>
+      </div>
     </nav>
   </aside>
 
@@ -133,12 +177,12 @@
     <!-- chapter tabs -->
     <div class="ch-tabs" id="ch-tabs">
       <button class="ch-tab active" data-chapter="wsl2-setup">第一章</button>
-      <button class="ch-tab pending" data-chapter="commands">第二章</button>
-      <button class="ch-tab pending" data-chapter="shell">第三章</button>
-      <button class="ch-tab pending" data-chapter="terminal">第四章</button>
-      <button class="ch-tab pending" data-chapter="ssh">第五章</button>
-      <button class="ch-tab pending" data-chapter="monitoring">第六章</button>
-      <button class="ch-tab pending" data-chapter="docker">第七章</button>
+      <button class="ch-tab" data-chapter="commands">第二章</button>
+      <button class="ch-tab" data-chapter="shell">第三章</button>
+      <button class="ch-tab" data-chapter="terminal">第四章</button>
+      <button class="ch-tab" data-chapter="ssh">第五章</button>
+      <button class="ch-tab" data-chapter="monitoring">第六章</button>
+      <button class="ch-tab" data-chapter="docker">第七章</button>
     </div>
 
     <!-- ══ 第一章：WSL2 ═══════════════════ -->
@@ -265,36 +309,675 @@ echo "deb [signed-by=/etc/apt/keyrings/example.gpg] https://example.com/ stable 
       </div>
     </div>
 
-    <!-- chapters 2-7: pending -->
-    <div class="ch-pending" data-chapter-panel="commands">
-      <div class="ch-panel-header"><span class="ch-label">第二章</span><span class="ch-title">常用命令速查</span></div>
-      <p class="ch-pending-text">整理中，敬请期待…</p>
+    <!-- ══ 第二章：常用命令速查 ══════════════ -->
+    <div class="ch-panel" data-chapter-panel="commands">
+      <div class="ch-panel-header">
+        <span class="ch-label">第二章</span>
+        <span class="ch-title">常用命令速查</span>
+      </div>
+      <div class="ch-panel-body">
+
+<h2 class="section-h2" id="cmd-file">1. 文件与目录操作</h2>
+<h3 class="section-h3">基础导航</h3>
+<div class="pre-block">pwd                  # 当前目录路径
+ls -lah              # 详细列出（含隐藏文件、人类可读大小）
+cd ~                 # 回 home 目录
+cd -                 # 回到上一个目录
+pushd /some/path     # 入栈并跳转
+popd                 # 出栈并跳转</div>
+<h3 class="section-h3">目录与文件管理</h3>
+<div class="pre-block">mkdir -p a/b/c       # 递归创建目录
+rm -rf dir           # 递归强制删除（⚠️ 慎用）
+cp -r src dst        # 递归复制
+mv old new           # 移动/重命名
+ln -s target link    # 创建软链接
+touch file.txt       # 新建空文件 / 更新时间戳
+find . -name "*.py"  # 按名搜索文件
+find . -mtime -1     # 近 24 小时修改过的文件
+fd pattern           # 更快的 find 替代（需安装 fd-find）</div>
+
+<h2 class="section-h2" id="cmd-view">2. 文件查看与编辑</h2>
+<div class="pre-block">cat file.txt         # 全量输出
+less file.log        # 分页浏览（q 退出、/搜索、n 下一处）
+head -n 20 file      # 前 20 行
+tail -f app.log      # 实时追踪末尾
+wc -l file           # 统计行数
+diff a.txt b.txt     # 对比差异
+vim file             # 编辑器</div>
+<div class="note-box">💡 日常配 <code class="text-code">alias less="less -R"</code> 可以让 <code class="text-code">less</code> 正确显示带颜色的日志（如 pytest 输出）。</div>
+
+<h2 class="section-h2" id="cmd-perm">3. 权限管理</h2>
+<div class="pre-block">chmod 755 script.sh   # rwxr-xr-x
+chmod +x script.sh    # 添加执行权限
+chown user:group file # 修改所有者
+ls -l                 # 查看权限
+umask 022             # 设置默认权限掩码</div>
+<p class="text-p">权限三位一组：<code class="text-code">rwx</code> = 读(4) + 写(2) + 执行(1)。常见组合：<code class="text-code">644</code>（文件）、<code class="text-code">755</code>（目录/脚本）、<code class="text-code">600</code>（私钥）。</p>
+<div class="warn-box">⚠️ <code class="text-code">chmod 777</code> 是"所有人都能读+写+执行"，除 <code class="text-code">/tmp</code> 外几乎永远不该用。</div>
+
+<h2 class="section-h2" id="cmd-proc">4. 进程管理</h2>
+<div class="pre-block">ps aux | grep python  # 查找 Python 进程
+kill -9 PID           # 强制杀进程（先试 kill PID）
+pkill -f "python train.py"  # 按命令行匹配杀
+htop                  # 交互式进程浏览器
+bg / fg               # 后台/前台任务切换
+jobs                  # 列出当前 shell 的后台任务
+nohup python train.py > log.txt 2>&1 &   # 后台跑，关终端不中断</div>
+<h3 class="section-h3">jobs / bg / fg 用法</h3>
+<div class="pre-block">python train.py &   # 后台启动
+Ctrl+Z               # 暂停当前前台任务
+bg %1                # 让 job 1 在后台继续
+fg %1                # 让 job 1 回到前台
+disown -h %1         # 从 shell 的 job table 移除，关终端不被杀</div>
+<div class="note-box">💡 在服务器跑长时间训练任务：优先用 <code class="text-code">nohup</code> 或 <code class="text-code">tmux</code>，比 <code class="text-code">disown</code> 更可靠。</div>
+
+<h2 class="section-h2" id="cmd-net">5. 网络诊断</h2>
+<div class="pre-block">ping -c 4 google.com  # 连通性测试（发 4 个包）
+curl -I https://api.example.com   # 只返回 HTTP 头
+curl -X POST -H "Content-Type: application/json" -d '{"k":"v"}' url
+wget -c url           # 断点续传下载
+ss -tlnp              # 查看监听端口
+ip addr / ifconfig    # 查看 IP 地址
+nc -zv host port      # 测试端口是否通
+dig example.com       # DNS 查询
+lsof -i :8080         # 查看谁占用了 8080 端口</div>
+
+<h2 class="section-h2" id="cmd-text">6. 文本处理三剑客</h2>
+<h3 class="section-h3">grep — 搜索过滤</h3>
+<div class="pre-block">grep "error" app.log           # 基础搜索
+grep -r "TODO" src/              # 递归搜索目录
+grep -i "warning" log            # 忽略大小写
+grep -v "DEBUG" log              # 排除匹配行
+grep -A 3 "error" log            # 显示匹配行及后 3 行
+grep -c "200" access.log         # 只输出匹配行数
+grep -E "err(or|ing)" log        # 扩展正则</div>
+<h3 class="section-h3">sed — 流编辑器（替换神器）</h3>
+<div class="pre-block">sed 's/foo/bar/' file           # 替换每行第一个 foo
+sed 's/foo/bar/g' file          # 全局替换
+sed -i 's/old/new/g' file       # 原地修改（⚠️ 先备份）
+sed '/pattern/d' file           # 删除匹配行
+sed -n '5,10p' file             # 只打印第 5-10 行</div>
+<h3 class="section-h3">awk — 列处理</h3>
+<div class="pre-block">awk '{print $1, $3}' file       # 打印第 1、3 列
+awk -F ':' '{print $1}' /etc/passwd  # 指定分隔符
+awk '$3 > 100 {print $1}' file  # 条件过滤
+awk '{sum+=$2} END {print sum}'  # 求和
+awk '{count[$1]++} END {for(k in count) print k, count[k]}'  # 分组统计</div>
+<p class="text-p">日常最常用的组合拳：</p>
+<div class="pre-block"># 查找占用最高的 5 个目录
+du -sh * | sort -rh | head -5
+
+# 统计 IP 访问次数排名
+awk '{print $1}' access.log | sort | uniq -c | sort -rn | head -10
+
+# 批量杀掉所有 python 进程
+ps aux | grep python | awk '{print $2}' | xargs kill</div>
+
+      </div>
     </div>
-    <div class="ch-pending" data-chapter-panel="shell">
-      <div class="ch-panel-header"><span class="ch-label">第三章</span><span class="ch-title">Shell 脚本与自动化</span></div>
-      <p class="ch-pending-text">整理中，敬请期待…</p>
+
+    <!-- ══ 第三章：Shell 脚本 ════════════════ -->
+    <div class="ch-panel" data-chapter-panel="shell">
+      <div class="ch-panel-header">
+        <span class="ch-label">第三章</span>
+        <span class="ch-title">Shell 脚本与自动化</span>
+      </div>
+      <div class="ch-panel-body">
+
+<h2 class="section-h2" id="shell-basics">1. 基础语法速览</h2>
+<h3 class="section-h3">Shebang 与变量</h3>
+<div class="pre-block">#!/bin/bash
+# 上面这行告诉系统用哪个解释器
+
+# 变量（等号两边不能有空格！）
+NAME="world"
+echo "Hello, $NAME"            # Hello, world
+echo "Hello, ${NAME}_suffix"   # 用花括号避免歧义
+
+# 命令替换
+NOW=$(date +%Y-%m-%d)
+FILES=$(ls *.txt | wc -l)
+
+# 特殊变量
+echo "Script: $0"
+echo "Arg1: $1, Arg2: $2"
+echo "All args: $@"
+echo "Arg count: $#"
+echo "Exit code: $?"            # 上一条命令的返回值</div>
+<h3 class="section-h3">字符串操作</h3>
+<div class="pre-block">STR="hello-world.py"
+echo ${STR%.py}       # hello-world  (去最短后缀)
+echo ${STR##*.}       # py           (去最长前缀)
+echo ${STR/-/_}       # hello_world.py (替换第一个)
+echo ${STR//-/ }      # hello world.py (替换全部)
+echo ${#STR}          # 15           (字符串长度)</div>
+<div class="note-box">💡 变量一定要加引号！<code class="text-code">rm -rf $DIR/</code>（若 <code class="text-code">$DIR</code> 为空）= <code class="text-code">rm -rf /</code>。改写成 <code class="text-code">rm -rf "$DIR/"</code> 或 <code class="text-code">rm -rf "${DIR:?}"</code> 安全得多。</div>
+
+<h2 class="section-h2" id="shell-ctrl">2. 条件判断与循环</h2>
+<h3 class="section-h3">if 语句</h3>
+<div class="pre-block"># 文件测试
+if [ -f "config.yaml" ]; then
+  echo "config found"
+elif [ -d "data/" ]; then
+  echo "data dir exists"
+else
+  echo "nothing found"
+fi
+
+# 数值比较（中括号内两侧必须有空格！）
+if [ "$COUNT" -gt 10 ]; then
+  echo "count > 10"
+fi
+
+# 字符串比较
+if [ "$MODE" = "train" ]; then
+  echo "training mode"
+fi
+
+# 命令成败判断
+if command -v python3 &> /dev/null; then
+  echo "python3 available"
+fi</div>
+<h3 class="section-h3">for / while 循环</h3>
+<div class="pre-block"># 遍历列表
+for seed in 42 123 456; do
+  python train.py --seed "$seed"
+done
+
+# 遍历文件
+for config in configs/*.yaml; do
+  python run.py --config "$config"
+done
+
+# while 循环（逐行读文件）
+while IFS= read -r line; do
+  echo "-> $line"
+done < input.txt
+
+# 无限循环 + 检测条件
+while true; do
+  sleep 3600
+  python check_gpu.py || break
+done</div>
+
+<h2 class="section-h2" id="shell-func">3. 函数与参数</h2>
+<div class="pre-block"># 定义
+log() {
+  local level=$1       # local 限制作用域
+  local msg=$2
+  echo "[$(date '+%H:%M:%S')] [$level] $msg"
+}
+
+log "INFO" "training started"
+
+# 返回值（只能 0-255，0=成功）
+check_gpu() {
+  nvidia-smi &> /dev/null
+  return $?            # 返回 nvidia-smi 的退出码
+}
+
+if check_gpu; then
+  echo "GPU available"
+fi
+
+# 函数输出捕获
+get_gpu_count() {
+  nvidia-smi -L | wc -l
+}
+GPU_COUNT=$(get_gpu_count)
+echo "Found $GPU_COUNT GPU(s)"</div>
+
+<h2 class="section-h2" id="shell-cases">4. 实用脚本案例</h2>
+<h3 class="section-h3">案例 1：批量超参数实验</h3>
+<div class="pre-block">#!/bin/bash
+# run_experiments.sh — 遍历学习率跑实验
+
+LR_LIST=(1e-3 5e-4 1e-4 5e-5)
+SEEDS=(42 123 456)
+
+for lr in "${LR_LIST[@]}"; do
+  for seed in "${SEEDS[@]}"; do
+    echo "=== lr=$lr seed=$seed ==="
+    python train.py \
+      --lr "$lr" \
+      --seed "$seed" \
+      --output_dir "outputs/lr${lr}_s${seed}"
+  done
+done</div>
+<h3 class="section-h3">案例 2：日志清理脚本</h3>
+<div class="pre-block">#!/bin/bash
+# clean_logs.sh — 删除 N 天前的日志并报告大小
+
+DAYS=${1:-30}                # 默认 30 天
+DIR=${2:-logs}
+
+echo "Cleaning files older than $DAYS days in $DIR..."
+SIZE_BEFORE=$(du -sh "$DIR" 2>/dev/null | cut -f1)
+find "$DIR" -name "*.log" -mtime +"$DAYS" -delete
+SIZE_AFTER=$(du -sh "$DIR" 2>/dev/null | cut -f1)
+echo "Done. $DIR: $SIZE_BEFORE → $SIZE_AFTER"</div>
+<h3 class="section-h3">案例 3：检查 GPU 空闲后自动跑训练</h3>
+<div class="pre-block">#!/bin/bash
+# wait_and_train.sh — 等待 GPU 显存低于阈值后启动训练
+
+THRESHOLD_MB=${1:-2000}               # 默认 2GB
+
+while true; do
+  FREE=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | head -1)
+  if [ "$FREE" -gt "$THRESHOLD_MB" ]; then
+    echo "[$(date)] GPU free: ${FREE}MB, starting training"
+    python train.py --epochs 100
+    break
+  fi
+  echo "[$(date)] GPU free: ${FREE}MB < ${THRESHOLD_MB}MB, waiting..."
+  sleep 60
+done</div>
+
+<h2 class="section-h2" id="shell-cron">5. 定时任务 cron</h2>
+<div class="pre-block"># 编辑 crontab
+crontab -e
+
+# 格式: 分 时 日 月 周 命令
+# * * * * * command
+
+# 每天凌晨 2 点清理日志
+0 2 * * * /home/user/scripts/clean_logs.sh 7
+
+# 每小时检查一次 GPU 状态并记录
+0 * * * * nvidia-smi >> /home/user/logs/gpu_$(date +%Y%m%d).log
+
+# 查看 cron 日志
+grep CRON /var/log/syslog</div>
+<div class="note-box">💡 cron 的环境变量非常精简。脚本中要用绝对路径，或在脚本开头 <code class="text-code">export PATH=...</code>。</div>
+
+      </div>
     </div>
-    <div class="ch-pending" data-chapter-panel="terminal">
-      <div class="ch-panel-header"><span class="ch-label">第四章</span><span class="ch-title">终端工具链配置</span></div>
-      <p class="ch-pending-text">整理中，敬请期待…</p>
+
+    <!-- ══ 第四章：终端工具链 ════════════════ -->
+    <div class="ch-panel" data-chapter-panel="terminal">
+      <div class="ch-panel-header">
+        <span class="ch-label">第四章</span>
+        <span class="ch-title">终端工具链配置</span>
+      </div>
+      <div class="ch-panel-body">
+
+<h2 class="section-h2" id="term-zsh">1. Zsh + Oh My Zsh 配置</h2>
+<h3 class="section-h3">安装 Zsh 并设为默认</h3>
+<div class="pre-block"># 安装 Zsh
+sudo apt install -y zsh
+
+# 设为默认 shell
+chsh -s $(which zsh)
+# 重新登录后生效。验证：
+echo $SHELL  # 应输出 /usr/bin/zsh</div>
+<h3 class="section-h3">安装 Oh My Zsh</h3>
+<div class="pre-block">sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"</div>
+<p class="text-p">安装后在 <code class="text-code">~/.zshrc</code> 里配置：</p>
+<div class="pre-block"># ~/.zshrc
+ZSH_THEME="robbyrussell"     # 内置主题
+# ZSH_THEME="agnoster"       # 需要 Powerline 字体
+
+plugins=(git docker python z history)  # 内置插件</div>
+<h3 class="section-h3">常用 alias</h3>
+<div class="pre-block"># 加到 ~/.zshrc
+alias l="ls -lah"
+alias ..="cd .."
+alias ...="cd ../.."
+alias gs="git status"
+alias gp="git pull"
+alias py="python"
+alias gpu="watch -n 1 nvidia-smi"
+alias dcs="docker compose ps"</div>
+
+<h2 class="section-h2" id="term-tmux">2. Tmux 会话管理</h2>
+<h3 class="section-h3">为什么要用 Tmux</h3>
+<ul class="list-ul">
+  <li>SSH 断线后训练任务不中断——重新连接后 <code class="text-code">tmux attach</code> 恢复现场</li>
+  <li>一个终端窗口切多个面板：左边写代码、右边跑命令、下边看日志</li>
+  <li>多窗口管理：每个项目一个 tmux session，互不干扰</li>
+</ul>
+<h3 class="section-h3">核心操作（前缀键：<b>Ctrl+b</b>）</h3>
+<div class="pre-block"># 会话管理
+tmux new -s dev          # 新建名为 dev 的会话
+tmux ls                  # 列出所有会话
+tmux attach -t dev       # 连接到 dev 会话
+tmux kill-session -t dev # 销毁会话
+
+# 面板
+Ctrl+b %                 # 竖直分屏
+Ctrl+b "                 # 水平分屏
+Ctrl+b 方向键            # 切换到相邻面板
+Ctrl+b x                 # 关闭当前面板
+
+# 窗口
+Ctrl+b c                 # 新建窗口
+Ctrl+b n / p             # 下一个/上一个窗口
+Ctrl+b 数字              # 跳到指定窗口
+
+# 滚动模式
+Ctrl+b [                 # 进入滚动（q 退出）</div>
+<h3 class="section-h3">推荐 .tmux.conf</h3>
+<div class="pre-block"># ~/.tmux.conf
+set -g mouse on                  # 允许鼠标操作
+set -g base-index 1              # 从 1 开始编号
+setw -g pane-base-index 1
+set -sg escape-time 0            # 加快按键响应
+set -g default-terminal "screen-256color"
+
+# 用 Alt+方向键 快速切换面板
+bind -n M-Left select-pane -L
+bind -n M-Right select-pane -R</div>
+
+<h2 class="section-h2" id="term-plugins">3. 常用插件推荐</h2>
+<h3 class="section-h3">zsh-autosuggestions</h3>
+<div class="pre-block">git clone https://github.com/zsh-users/zsh-autosuggestions \
+  ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+# 在 ~/.zshrc 的 plugins 里加入 zsh-autosuggestions</div>
+<p class="text-p">效果：输入命令时自动弹灰色建议，按 <code class="text-code">→</code> 补全。</p>
+<h3 class="section-h3">zsh-syntax-highlighting</h3>
+<div class="pre-block">git clone https://github.com/zsh-users/zsh-syntax-highlighting.git \
+  ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+# 在 ~/.zshrc 的 plugins 里加入 zsh-syntax-highlighting</div>
+<p class="text-p">效果：合法命令绿色，不存在的命令红色，帮你在敲完前就发现拼写错误。</p>
+<h3 class="section-h3">fzf（模糊搜索）</h3>
+<div class="pre-block">sudo apt install fzf
+# Ctrl+T: 模糊搜索文件名并粘贴路径
+# Ctrl+R: 模糊搜索命令历史
+# ** + Tab: 模糊补全路径</div>
+<div class="note-box">💡 这三个插件加起来，终端操作效率和体验提升非常明显。</div>
+
+      </div>
     </div>
-    <div class="ch-pending" data-chapter-panel="ssh">
-      <div class="ch-panel-header"><span class="ch-label">第五章</span><span class="ch-title">SSH 远程开发与服务器运维</span></div>
-      <p class="ch-pending-text">整理中，敬请期待…</p>
+
+    <!-- ══ 第五章：SSH ═══════════════════════ -->
+    <div class="ch-panel" data-chapter-panel="ssh">
+      <div class="ch-panel-header">
+        <span class="ch-label">第五章</span>
+        <span class="ch-title">SSH 远程开发与服务器运维</span>
+      </div>
+      <div class="ch-panel-body">
+
+<h2 class="section-h2" id="ssh-basics">1. SSH 基础与密钥登录</h2>
+<h3 class="section-h3">生成密钥对并部署</h3>
+<div class="pre-block"># 本机生成 ED25519 密钥（比 RSA 更快更安全）
+ssh-keygen -t ed25519 -C "your_email@example.com"
+# 一路回车即可，私钥: ~/.ssh/id_ed25519
+
+# 把公钥复制到服务器
+ssh-copy-id user@server_ip
+
+# 或手动追加
+cat ~/.ssh/id_ed25519.pub | ssh user@server_ip \
+  "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+
+# 在服务器上修改权限（必须！）
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys</div>
+<h3 class="section-h3">安全加固（服务端）</h3>
+<div class="pre-block"># 编辑 /etc/ssh/sshd_config
+PermitRootLogin no             # 禁止 root 直接登录
+PasswordAuthentication no      # 禁用密码登录（仅用密钥）
+PubkeyAuthentication yes       # 启用密钥认证
+Port 2222                      # 换非标准端口（减少扫描）
+
+# 重启 SSH 服务
+sudo systemctl restart sshd</div>
+<div class="warn-box">⚠️ 改端口前务必确认密钥登录正常，否则改完把自己锁在外面。</div>
+
+<h2 class="section-h2" id="ssh-config">2. SSH Config — 简化连接</h2>
+<div class="pre-block"># ~/.ssh/config
+
+Host myserver
+    HostName 192.168.1.100
+    User ubuntu
+    Port 2222
+    IdentityFile ~/.ssh/id_ed25519
+
+Host lab-gpu-*
+    User student
+    IdentityFile ~/.ssh/lab_key
+    StrictHostKeyChecking no     # 实验环境忽略指纹变化
+
+# 使用：ssh myserver 代替 ssh ubuntu@192.168.1.100 -p 2222</div>
+<p class="text-p">常用配置项：<code class="text-code">ServerAliveInterval 60</code>（发心跳防止断连）、<code class="text-code">ForwardAgent yes</code>（跳板机场景）。</p>
+
+<h2 class="section-h2" id="ssh-tunnel">3. 端口转发与隧道</h2>
+<h3 class="section-h3">本地端口转发</h3>
+<div class="pre-block"># 把 remote 的 8888 端口映射到本机 8888
+ssh -L 8888:localhost:8888 user@remote
+# 本机浏览器访问 localhost:8888 即访问远程 Jupyter</div>
+<h3 class="section-h3">远程端口转发</h3>
+<div class="pre-block"># 把本机 3000 端口暴露到 remote 的 9000
+ssh -R 9000:localhost:3000 user@remote</div>
+<h3 class="section-h3">跳板机（ProxyJump）</h3>
+<div class="pre-block"># 通过 jump 跳转访问 target
+ssh -J user@jump_host user@target_host
+
+# 或写在 config 里
+Host target
+    HostName 10.0.0.5
+    User ubuntu
+    ProxyJump jump_host</div>
+
+<h2 class="section-h2" id="ssh-vscode">4. VSCode Remote SSH</h2>
+<p class="text-p">安装 <code class="text-code">Remote - SSH</code> 扩展后，VSCode 自动读取 <code class="text-code">~/.ssh/config</code> 里的主机列表。点击左下角绿色按钮 → "Connect to Host..." → 选目标主机即可。</p>
+<p class="text-p">首次连接会在远程安装 VSCode Server，之后所有扩展/终端/linter 都在远程机器运行，体验和本地开发几乎一样。</p>
+<div class="note-box">💡 配合 <code class="text-code">~/.ssh/config</code> 使用体验最佳。所有 Host 别名都会出现在 VSCode 的远程连接列表里。</div>
+
+<h2 class="section-h2" id="ssh-transfer">5. 文件传输与同步</h2>
+<div class="pre-block"># SCP：简单文件传输
+scp local_file user@server:/remote/path/
+scp user@server:/remote/file ./local_dir/
+scp -r local_dir user@server:/remote/
+
+# rsync：增量同步（推荐，比 SCP 快且支持断点续传）
+rsync -avzP ./data/ user@server:/data/
+# -a: 归档模式  -v: 详细  -z: 压缩  -P: 进度+断点续传
+# --exclude='*.pyc' --exclude='__pycache__'   # 排除文件</div>
+
+      </div>
     </div>
-    <div class="ch-pending" data-chapter-panel="monitoring">
-      <div class="ch-panel-header"><span class="ch-label">第六章</span><span class="ch-title">性能监控与调优</span></div>
-      <p class="ch-pending-text">整理中，敬请期待…</p>
+
+    <!-- ══ 第六章：性能监控 ═══════════════════ -->
+    <div class="ch-panel" data-chapter-panel="monitoring">
+      <div class="ch-panel-header">
+        <span class="ch-label">第六章</span>
+        <span class="ch-title">性能监控与调优</span>
+      </div>
+      <div class="ch-panel-body">
+
+<h2 class="section-h2" id="mon-cpu-mem">1. CPU 与内存监控</h2>
+<h3 class="section-h3">htop — 交互式进程浏览器</h3>
+<div class="pre-block">sudo apt install htop -y
+htop
+# F6 选择排序依据（CPU%、MEM%、TIME）
+# F9 杀进程
+# F5 切换成树状视图（看父子进程关系）</div>
+<p class="text-p">对比 <code class="text-code">top</code>：<code class="text-code">htop</code> 彩色、可鼠标点击、可直接杀进程、横竖滚动都支持，实用性强得多。</p>
+<h3 class="section-h3">内存概况</h3>
+<div class="pre-block">free -h              # 内存总量、使用量、可用量
+vmstat 1 5           # 每秒刷新一次，共 5 次
+# si/so 列：如果不是 0，说明在用 swap（内存不够了）</div>
+
+<h2 class="section-h2" id="mon-gpu">2. GPU 监控 (nvidia-smi)</h2>
+<h3 class="section-h3">基础查询</h3>
+<div class="pre-block">nvidia-smi                    # 一次性查看全部 GPU 状态
+nvidia-smi -l 1               # 每秒刷新（Ctrl+C 停止）
+watch -n 1 nvidia-smi         # 同上，watch 也可以
+nvidia-smi -q -d MEMORY       # 只查显存详情</div>
+<h3 class="section-h3">检查 GPU 被谁占用</h3>
+<div class="pre-block"># 列出所有 GPU 上的进程
+nvidia-smi pmon -c 1          # 每 1 秒快照
+fuser -v /dev/nvidia*         # 列出所有访问 GPU 的进程</div>
+<h3 class="section-h3">gpustat — 更清爽的 nvidia-smi</h3>
+<div class="pre-block">pip install gpustat
+gpustat -i 1                  # 每秒刷新，彩色显示显存使用条
+gpustat -cp                   # 显示每个 GPU 上的进程
+watch --color -n 1 gpustat --color</div>
+<p class="text-p"><code class="text-code">gpustat</code> 输出比 <code class="text-code">nvidia-smi</code> 紧凑得多，一眼看清哪些 GPU 空闲、谁在用什么。</p>
+
+<h2 class="section-h2" id="mon-disk">3. 磁盘与 IO</h2>
+<div class="pre-block">df -h                # 各分区使用量
+du -sh *             # 当前目录下各子目录大小
+ncdu                 # 交互式磁盘分析（需 apt install ncdu）
+
+iostat -x 1          # 磁盘 IO 统计（需 apt install sysstat）
+iotop                # 类似 htop，看谁在读写磁盘</div>
+
+<h2 class="section-h2" id="mon-limit">4. 资源限制</h2>
+<h3 class="section-h3">ulimit（进程级别限制）</h3>
+<div class="pre-block">ulimit -a              # 查看所有限制
+ulimit -n 65536       # 设置最大文件描述符数</div>
+<h3 class="section-h3">限制训练任务 GPU 显存（PyTorch）</h3>
+<div class="pre-block"># 设置环境变量（只对当前进程生效）
+export CUDA_VISIBLE_DEVICES=0,1  # 只用 0 号和 1 号 GPU
+export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128</div>
+<div class="note-box">💡 共享服务器上跑实验，务必 <code class="text-code">nvidia-smi</code> 先看一眼谁在用哪张卡，避免踩到别人的训练任务。</div>
+
+      </div>
     </div>
-    <div class="ch-pending" data-chapter-panel="docker">
-      <div class="ch-panel-header"><span class="ch-label">第七章</span><span class="ch-title">Docker 基础与实践</span></div>
-      <p class="ch-pending-text">整理中，敬请期待…</p>
+
+    <!-- ══ 第七章：Docker ════════════════════ -->
+    <div class="ch-panel" data-chapter-panel="docker">
+      <div class="ch-panel-header">
+        <span class="ch-label">第七章</span>
+        <span class="ch-title">Docker 基础与实践</span>
+      </div>
+      <div class="ch-panel-body">
+
+<h2 class="section-h2" id="docker-concepts">1. 核心概念</h2>
+<p class="text-p">Docker 用"容器"打包应用及其所有依赖，确保在任何机器上运行一致。三个核心概念：</p>
+<ul class="list-ul">
+  <li><b>镜像（Image）</b>：只读模板，含 OS 文件、依赖库、代码。从 Dockerfile 构建。</li>
+  <li><b>容器（Container）</b>：镜像的运行实例，轻量级沙箱，共享宿主机内核。</li>
+  <li><b>仓库（Registry）</b>：镜像的存储和分发中心（Docker Hub / 阿里云镜像仓库）。</li>
+</ul>
+
+<h2 class="section-h2" id="docker-cmds">2. 常用命令</h2>
+<div class="pre-block"># 镜像
+docker pull python:3.11-slim    # 拉取镜像
+docker images                   # 列出本地镜像
+docker rmi image_id             # 删除镜像
+
+# 容器
+docker run -it --rm python:3.11 bash        # 启动交互式容器
+docker run -d --name myapp -p 8080:80 nginx  # 后台运行，端口映射
+docker ps                        # 运行中的容器
+docker ps -a                     # 所有容器
+docker logs -f myapp             # 实时查看日志
+docker exec -it myapp bash       # 进入运行中的容器
+
+# 清理
+docker system prune -a           # 清理所有未用的镜像/容器/网络</div>
+<h3 class="section-h3">docker run 常用参数速查</h3>
+<div class="pre-block">docker run \
+  -d --name myapp \            # 后台运行 + 命名
+  --gpus all \                 # 挂载所有 GPU
+  -p 8080:80 \                 # 端口映射
+  -v /host/data:/app/data \    # 挂载数据卷
+  -e ENV_VAR=value \           # 环境变量
+  --shm-size=8g \              # 共享内存大小（PyTorch 需要）
+  --restart=unless-stopped \   # 崩溃自动重启
+  image:tag</div>
+
+<h2 class="section-h2" id="docker-df">3. Dockerfile 编写</h2>
+<h3 class="section-h3">Python 项目示例</h3>
+<div class="pre-block">FROM python:3.11-slim
+
+WORKDIR /app
+
+# 先复制依赖文件（利用 Docker 层缓存）
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 再复制代码
+COPY . .
+
+EXPOSE 8000
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]</div>
+<h3 class="section-h3">PyTorch 项目示例</h3>
+<div class="pre-block">FROM pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
+
+WORKDIR /workspace
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+
+ENTRYPOINT ["python", "train.py"]</div>
+<div class="note-box">💡 先 <code class="text-code">COPY requirements.txt</code> 再 <code class="text-code">COPY .</code> 是关键优化——依赖文件变动少，Docker 会复用缓存层。</div>
+
+<h2 class="section-h2" id="docker-compose">4. Docker Compose</h2>
+<p class="text-p">当项目涉及多个容器（如 API + Redis + PostgreSQL），用 Compose 一把管理：</p>
+<div class="pre-block"># docker-compose.yml
+version: "3.8"
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/mydb
+    depends_on:
+      - redis
+      - db
+
+  redis:
+    image: redis:7-alpine
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydb</div>
+<div class="pre-block">docker compose up -d        # 后台启动所有服务
+docker compose down          # 停止并删除容器
+docker compose logs -f api   # 查看 api 服务的日志
+docker compose build         # 重新构建镜像</div>
+
+<h2 class="section-h2" id="docker-dl">5. 深度学习容器化实践</h2>
+<p class="text-p">把训练环境 Docker 化的几个实际好处：</p>
+<ul class="list-ul">
+  <li>论文复现仓库自带 Dockerfile → 一行命令获得完全相同的环境</li>
+  <li>多台 GPU 服务器部署同一训练任务，不用担心 CUDA/cuDNN 版本差异</li>
+  <li>实验环境隔离，Python 包冲突再也跟你没关系</li>
+</ul>
+<p class="text-p">常用基础镜像选择：</p>
+<div class="pre-block"># 官方 PyTorch 镜像（推荐）
+pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
+pytorch/pytorch:2.1.0-cuda12.1-cudnn8-devel     # 需编译 CUDA 扩展时
+
+# NVIDIA 官方 CUDA 镜像
+nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04</div>
+<h3 class="section-h3">docker-compose 训练配置示例</h3>
+<div class="pre-block"># docker-compose.train.yml
+services:
+  train:
+    image: pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
+    volumes:
+      - ./:/workspace
+      - /data/datasets:/datasets:ro  # 数据集只读挂载
+    command: python train.py --epochs 100 --batch-size 64
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    shm_size: "8gb"
+    environment:
+      - CUDA_VISIBLE_DEVICES=0</div>
+
+      </div>
     </div>
 
     <!-- prev / next nav -->
     <div class="ch-nav" id="ch-nav">
-      <div class="ch-nav-spacer"></div>
-      <button class="ch-nav-btn" id="nav-next" data-target="commands" style="display:none">下一章 → <span class="nav-label">(第二章 常用命令速查)</span></button>
+      <!-- buttons inserted by JS -->
     </div>
   </div>
 </div>
@@ -302,19 +985,25 @@ echo "deb [signed-by=/etc/apt/keyrings/example.gpg] https://example.com/ stable 
 <script>
 (function() {
   const chapterIds = ['wsl2-setup', 'commands', 'shell', 'terminal', 'ssh', 'monitoring', 'docker'];
-  const pendingIds = ['commands', 'shell', 'terminal', 'ssh', 'monitoring', 'docker'];
+  const chapterLabels = {
+    'wsl2-setup': '第一章 WSL2 & Ubuntu 开发环境搭建',
+    'commands': '第二章 常用命令速查',
+    'shell': '第三章 Shell 脚本与自动化',
+    'terminal': '第四章 终端工具链配置',
+    'ssh': '第五章 SSH 远程开发与服务器运维',
+    'monitoring': '第六章 性能监控与调优',
+    'docker': '第七章 Docker 基础与实践'
+  };
   let currentChapter = 'wsl2-setup';
-  let currentSection = 'wsl2-intro';
 
   /* ── switch chapter ── */
   function switchChapter(chapterId, sectionId) {
-    if (pendingIds.includes(chapterId)) return; // pending chapters not clickable
     currentChapter = chapterId;
 
     // hide all panels, show target
-    document.querySelectorAll('.ch-panel, .ch-pending').forEach(el => el.classList.remove('visible'));
-    const panel = document.querySelector(`[data-chapter-panel="${chapterId}"]`);
-    if (panel) panel.classList.add('visible');
+    document.querySelectorAll('.ch-panel').forEach(el => {
+      el.classList.toggle('visible', el.dataset.chapterPanel === chapterId);
+    });
 
     // update chapter tabs
     document.querySelectorAll('.ch-tab').forEach(t => {
@@ -324,7 +1013,7 @@ echo "deb [signed-by=/etc/apt/keyrings/example.gpg] https://example.com/ stable 
     // update sidebar chapter titles
     document.querySelectorAll('.sidebar-ch-title').forEach(el => {
       const isActive = el.dataset.chapter === chapterId;
-      el.classList.toggle('active', isActive && !el.classList.contains('pending'));
+      el.classList.toggle('active', isActive);
       const label = el.querySelector('.label');
       if (label) {
         label.classList.toggle('active-label', isActive);
@@ -334,27 +1023,22 @@ echo "deb [signed-by=/etc/apt/keyrings/example.gpg] https://example.com/ stable 
 
     // show relevant sub-sections, hide others
     document.querySelectorAll('.sidebar-sub').forEach(el => {
-      el.style.display = el.dataset.chapter === chapterId ? 'block' : 'none';
-      el.classList.toggle('active', el.dataset.section === sectionId);
+      const match = el.dataset.chapter === chapterId;
+      el.style.display = match ? 'block' : 'none';
+      el.classList.toggle('active', match && el.dataset.section === sectionId);
     });
 
     // update prev/next nav
     updateNav(chapterId);
 
     // scroll to section
-    if (sectionId) {
-      currentSection = sectionId;
-      setTimeout(() => {
-        const target = document.getElementById(sectionId);
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else {
-          // scroll to chapter top
-          const panel = document.querySelector(`[data-chapter-panel="${chapterId}"]`);
-          if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 50);
-    }
+    setTimeout(() => {
+      const targetId = sectionId || (document.querySelector(`[data-chapter-panel="${chapterId}"] .section-h2`)?.id);
+      if (targetId) {
+        const target = document.getElementById(targetId);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
 
     // re-observe sections
     setupObserver();
@@ -362,49 +1046,38 @@ echo "deb [signed-by=/etc/apt/keyrings/example.gpg] https://example.com/ stable 
 
   /* ── prev / next ── */
   function updateNav(chapterId) {
+    const nav = document.getElementById('ch-nav');
+    nav.innerHTML = '';
     const idx = chapterIds.indexOf(chapterId);
-    const prevBtn = document.getElementById('nav-prev');
-    const nextBtn = document.getElementById('nav-next');
 
-    // find prev non-pending
-    let prevId = null;
-    for (let i = idx - 1; i >= 0; i--) {
-      if (!pendingIds.includes(chapterIds[i])) { prevId = chapterIds[i]; break; }
-    }
-    // find next non-pending at or after this position
-    let nextId = null;
-    for (let i = idx + 1; i < chapterIds.length; i++) {
-      if (!pendingIds.includes(chapterIds[i])) { nextId = chapterIds[i]; break; }
-    }
-
-    // create prev button if needed
-    if (prevId && !prevBtn) {
+    // prev
+    if (idx > 0) {
+      const prevId = chapterIds[idx - 1];
       const btn = document.createElement('button');
-      btn.className = 'ch-nav-btn'; btn.id = 'nav-prev';
-      btn.innerHTML = '← 上一章';
+      btn.className = 'ch-nav-btn';
+      btn.innerHTML = '← 上一章 <span class="nav-label">(' + chapterLabels[prevId] + ')</span>';
       btn.addEventListener('click', () => switchChapter(prevId));
-      const nav = document.getElementById('ch-nav');
-      nav.insertBefore(btn, nav.firstChild);
-    } else if (!prevId && prevBtn) {
-      prevBtn.remove();
-    } else if (prevId && prevBtn) {
-      prevBtn.dataset.target = prevId;
-      prevBtn.onclick = () => switchChapter(prevId);
+      nav.appendChild(btn);
     }
 
-    if (nextBtn) {
-      if (nextId) {
-        nextBtn.style.display = '';
-        nextBtn.dataset.target = nextId;
-        nextBtn.onclick = () => switchChapter(nextId);
-      } else {
-        nextBtn.style.display = 'none';
-      }
+    // spacer
+    const spacer = document.createElement('div');
+    spacer.className = 'ch-nav-spacer';
+    nav.appendChild(spacer);
+
+    // next
+    if (idx < chapterIds.length - 1) {
+      const nextId = chapterIds[idx + 1];
+      const btn = document.createElement('button');
+      btn.className = 'ch-nav-btn';
+      btn.innerHTML = '下一章 → <span class="nav-label">(' + chapterLabels[nextId] + ')</span>';
+      btn.addEventListener('click', () => switchChapter(nextId));
+      nav.appendChild(btn);
     }
   }
 
   /* ── sidebar click ── */
-  document.querySelectorAll('.sidebar-ch-title:not(.pending)').forEach(el => {
+  document.querySelectorAll('.sidebar-ch-title').forEach(el => {
     el.addEventListener('click', () => {
       const chapterId = el.dataset.chapter;
       const panel = document.querySelector(`[data-chapter-panel="${chapterId}"]`);
@@ -420,7 +1093,7 @@ echo "deb [signed-by=/etc/apt/keyrings/example.gpg] https://example.com/ stable 
   });
 
   /* ── tab click ── */
-  document.querySelectorAll('.ch-tab:not(.pending)').forEach(el => {
+  document.querySelectorAll('.ch-tab').forEach(el => {
     el.addEventListener('click', () => {
       const chapterId = el.dataset.chapter;
       const panel = document.querySelector(`[data-chapter-panel="${chapterId}"]`);
@@ -433,7 +1106,6 @@ echo "deb [signed-by=/etc/apt/keyrings/example.gpg] https://example.com/ stable 
   let observer;
   function setupObserver() {
     if (observer) observer.disconnect();
-
     const subs = document.querySelectorAll(`.sidebar-sub[data-chapter="${currentChapter}"]`);
     if (subs.length === 0) return;
 
@@ -443,7 +1115,6 @@ echo "deb [signed-by=/etc/apt/keyrings/example.gpg] https://example.com/ stable 
           document.querySelectorAll('.sidebar-sub').forEach(s => s.classList.remove('active'));
           const active = document.querySelector(`.sidebar-sub[data-section="${entry.target.id}"]`);
           if (active) active.classList.add('active');
-          currentSection = entry.target.id;
           break;
         }
       }
