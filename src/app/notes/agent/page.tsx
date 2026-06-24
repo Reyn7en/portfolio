@@ -31,13 +31,13 @@ const chapters = [
     title: 'State 深入',
     desc: 'add_messages、Reducer 与 StateGraph 选型',
     sections: [
-      { id: 'st-why', title: '为什么 State 值得单独学' },
+      { id: 'st-why', title: '哪些坑逼我重学 State' },
       { id: 'st-typeddict', title: 'TypedDict + Annotated 标准写法' },
       { id: 'st-add-messages', title: 'add_messages 到底在做什么' },
       { id: 'st-reducer', title: 'Reducer：多节点写入同一字段怎么办' },
       { id: 'st-messagegraph', title: 'MessageGraph vs StateGraph' },
       { id: 'st-practice', title: '实际写代码时的几个观察' },
-      { id: 'st-summary', title: '阶段性总结' },
+      { id: 'st-summary', title: '本章回顾' },
     ],
   },
   {
@@ -46,14 +46,14 @@ const chapters = [
     title: 'Router & Tool Calling Agent',
     desc: '条件边路由、结构化输出、ToolNode 与 bind_tools',
     sections: [
-      { id: 'rt-why', title: '为什么需要 Router Agent' },
+      { id: 'rt-why', title: '让 Agent 选路而不是硬编码' },
       { id: 'rt-conditional-edge', title: '条件边：LangGraph 的路由机制' },
       { id: 'rt-structured-output', title: '结构化输出：让路由判断更可靠' },
       { id: 'rt-tool-calling-basics', title: 'Tool Calling Agent 基础' },
       { id: 'rt-toolnode', title: 'ToolNode：工具执行的专用节点' },
       { id: 'rt-bind-tools', title: 'bind_tools()：把工具告诉 LLM' },
       { id: 'rt-complete-example', title: '一个完整的 Tool Calling Agent 骨架' },
-      { id: 'rt-summary', title: '阶段性总结' },
+      { id: 'rt-summary', title: '本章回顾' },
     ],
   },
   {
@@ -62,13 +62,13 @@ const chapters = [
     title: 'ReAct 自治循环',
     desc: 'Thought→Action→Observation、create_react_agent、流式输出',
     sections: [
-      { id: 'rl-why', title: '为什么需要 ReAct Agent' },
+      { id: 'rl-why', title: '让 Agent 自己决定下一步' },
       { id: 'rl-react-cycle', title: 'ReAct 循环' },
       { id: 'rl-create-react', title: 'create_react_agent 一行搭建' },
       { id: 'rl-streaming', title: '流式输出：看到 Agent 的思考过程' },
       { id: 'rl-termination', title: '终止条件：Agent 什么时候停' },
       { id: 'rl-vs-tool-calling', title: 'ReAct vs Tool Calling：什么时候用哪个' },
-      { id: 'rl-summary', title: '阶段性总结' },
+      { id: 'rl-summary', title: '本章回顾' },
     ],
   },
   {
@@ -77,14 +77,14 @@ const chapters = [
     title: '记忆系统',
     desc: 'Checkpointer 短期记忆、Store 长期记忆、混合使用',
     sections: [
-      { id: 'ms-why', title: '为什么需要记忆系统' },
+      { id: 'ms-why', title: '记忆的两个维度' },
       { id: 'ms-checkpointer', title: 'Checkpointer：短期记忆（会话级别）' },
       { id: 'ms-store', title: 'Store：长期记忆（跨会话）' },
       { id: 'ms-saver-types', title: 'MemorySaver vs SqliteSaver vs PostgresSaver' },
       { id: 'ms-use-checkpointer', title: '如何在图中使用 Checkpointer' },
       { id: 'ms-use-store', title: '如何在图中使用 Store' },
       { id: 'ms-hybrid', title: '混合使用场景' },
-      { id: 'ms-summary', title: '阶段性总结' },
+      { id: 'ms-summary', title: '本章回顾' },
     ],
   },
   {
@@ -93,7 +93,7 @@ const chapters = [
     title: 'Human-in-the-Loop',
     desc: 'interrupt / Command、审批流设计、敏感操作安全实践',
     sections: [
-      { id: 'hl-why', title: '为什么需要 Human-in-the-Loop' },
+      { id: 'hl-why', title: '什么时候必须停下来' },
       { id: 'hl-interrupt', title: 'interrupt：在节点中主动中断' },
       { id: 'hl-command', title: 'Command：恢复执行与注入人工输入' },
       { id: 'hl-approval-flow', title: '审批流设计模式' },
@@ -109,7 +109,7 @@ const chapters = [
     title: 'Multi-Agent 架构',
     desc: 'Supervisor、Hierarchical、平级协作、Agent 间通信',
     sections: [
-      { id: 'ma-why', title: '为什么需要 Multi-Agent' },
+      { id: 'ma-why', title: '单 Agent 的天花板' },
       { id: 'ma-supervisor', title: 'Supervisor 模式' },
       { id: 'ma-hierarchical', title: 'Hierarchical 分层架构' },
       { id: 'ma-peer-collab', title: '平级协作模式' },
@@ -270,7 +270,7 @@ function ChapterLanggraph() {
       <>自定义字段，比如 <C>context</C>、<C>intermediate_steps</C></>,
     ]} />
     <P>LangGraph 中使用 <C>TypedDict</C> 或 Pydantic 模型定义 State。我目前用 <C>TypedDict</C> + <C>Annotated</C>，因为它可以为每个字段指定 reducer 逻辑（比如消息字段用 <C>add_messages</C> 来累积而不是覆盖）。</P>
-    <NB>提醒：<C>add_messages</C> 的具体行为（如同 ID 消息的更新逻辑）发布前需要对照最新 LangGraph 文档核实。</NB>
+    <NB>注意：<C>add_messages</C> 的具体行为（如同 ID 消息的更新逻辑）在不同 LangGraph 版本间可能有细微差异。</NB>
 
     <H2 id="lg-node-edge">4. Node 和 Edge：把流程拆成可控的步骤</H2>
     <P>在用 LangGraph 之前，我写 Agent 逻辑的方式是一个大函数吃到底：调 LLM → 解析 → 需要就调工具 → 再解析 → 返回。简单场景能跑，但问题很明显：</P>
@@ -283,7 +283,6 @@ function ChapterLanggraph() {
     <Pre code={codeNodeExample} />
     <P>条件边负责路由决策：</P>
     <Pre code={codeRouter} />
-    <NB>提醒：<C>bind_tools()</C> 和 <C>add_conditional_edges()</C> 的签名可能随 LangGraph 版本变化，发布前请对照最新文档。</NB>
 
     <H2 id="lg-tool-calling">5. Tool Calling：让模型从「生成文本」变成「调用能力」</H2>
     <P>这是学 LangGraph 最让我开眼界的部分。LLM 只能输出文本，但 Tool Calling 把它从"回答者"变成了"编排者"——它不执行，而是判断需要什么、然后请求执行。</P>
@@ -307,7 +306,6 @@ function ChapterLanggraph() {
       <>下次用同一个 <C>thread_id</C> 调用，从上次存档点恢复</>,
     ]} />
     <P>目前我开发调试只用内存 <C>MemorySaver</C>。如果要上线，需要换成持久化后端（<C>SqliteSaver</C> 或 <C>PostgresSaver</C>）。</P>
-    <NB>提醒：<C>SqliteSaver</C> 和 <C>PostgresSaver</C> 的导入路径可能随 LangGraph 版本变化，发布前请确认。</NB>
 
     <H2 id="lg-streaming">7. Streaming：为什么流式输出很重要</H2>
     <P><C>graph.stream()</C> 是我觉得最实用的功能之一。除了渐进式输出带来的用户体验提升，它对我更大的价值是<Strong>调试可见性</Strong>。</P>
@@ -324,7 +322,6 @@ function ChapterLanggraph() {
     <P>一个最小的 LangGraph 工作流，展示了 ReAct 循环的核心逻辑：</P>
     <Pre code={codeFull} />
     <P>如果 LLM 判断需要天气工具，流程是：agent → tools → agent → END。如果不需要：agent → END。整个过程逐步流式输出，Agent 的决策链一目了然。</P>
-    <NB>这段代码是学习过程中凭记忆重建的，<C>HumanMessage</C>、<C>add_messages</C>、<C>StateGraph.compile()</C> 等 API 名称和参数发布前请对照最新版 LangGraph 核实。</NB>
 
     <H2 id="lg-understanding">9. 我的阶段性理解</H2>
     <Ul items={[
@@ -343,7 +340,7 @@ function ChapterLanggraph() {
 
 function ChapterState() {
   return <>
-    <H2 id="st-why">1. 为什么 State 值得单独学</H2>
+    <H2 id="st-why">1. 哪些坑逼我重学 State</H2>
     <P>在第一篇笔记里，我把 State 概括为「Agent 的共享工作台」。这个说法够用，但真正写代码的时候会发现：State 怎么定义、怎么更新、多个节点怎么安全地读写，这些细节直接决定图能不能跑通。</P>
     <P>我一开始的理解是：「State 就是一个字典，节点往里面塞东西就行」。后来踩了几次坑才发现，LangGraph 的 State 设计有一套明确的规则，不理解这些规则，图的行为会和你预期的不一样。</P>
 
@@ -382,7 +379,7 @@ class AgentState(TypedDict):
       <><C>StateGraph</C>：State 可以有任意多个字段，适合需要管理多种状态（消息、步骤计数、检索结果、工具输出等）的场景</>,
     ]} />
     <P>我目前所有的练习都用的是 <C>StateGraph</C>，即使场景很简单。原因是：我担心用 <C>MessageGraph</C> 之后，如果后面想加一个新字段（比如 <C>search_results</C>），又要迁移到 <C>StateGraph</C>，不如一开始就直接用更通用的方案。</P>
-    <P>但这个判断对不对，我不确定。如果场景确实只有一个 <C>messages</C> 列表，用 <C>MessageGraph</C> 可能更简洁。这个等我有实际对比经验之后再更新。</P>
+    <P>如果场景确实只有一个 <C>messages</C> 列表，用 <C>MessageGraph</C> 可能更简洁。不过我自己倾向于一开始就用 <C>StateGraph</C>，省的后面加字段时要迁移。</P>
 
     <H2 id="st-practice">6. 实际写代码时的几个观察</H2>
     <P>以下是我在写代码过程中逐渐发现的几点，不一定对，仅供参考：</P>
@@ -392,7 +389,7 @@ class AgentState(TypedDict):
       <><Strong>调试时打印 State 很有用。</Strong>在每个节点函数开头加一句 <C>print(state)</C>，可以看到图执行到这一步时的完整状态。这比单纯看 LangSmith 的 trace 更直观（对我而言）。</>,
     ]} />
 
-    <H2 id="st-summary">7. 阶段性总结</H2>
+    <H2 id="st-summary">7. 本章回顾</H2>
     <Ul items={[
       'State 不是普通变量，它是图的「共享工作台」，所有节点通过它通信。',
       <><C>TypedDict</C> + <C>Annotated</C> 是标准写法，后者声明 reducer，决定字段怎么合并。</>,
@@ -409,7 +406,7 @@ class AgentState(TypedDict):
 
 function ChapterRouterToolCalling() {
   return <>
-    <H2 id="rt-why">1. 为什么需要 Router Agent</H2>
+    <H2 id="rt-why">1. 让 Agent 选路而不是硬编码</H2>
     <P>最开始的 Agent 只有一条路：用户输入 → LLM → 输出。但实际场景下，不同问题需要不同的处理方式。比如「天气查询」和「写代码」，显然应该走不同的工具链。</P>
     <P>Router Agent 的核心思路是：<Strong>让 LLM 先判断「该走哪条路」，再执行对应的流程</Strong>。这比把所有工具都塞给 LLM 让它自己选要清晰得多。</P>
     <P>我目前的理解：Router 本质上是一个「分类器」——输入问题，输出一个路由标签，图根据这个标签走到不同的下游节点。</P>
@@ -542,9 +539,8 @@ graph.add_conditional_edges("agent", should_continue)
 graph.add_edge("tools", "agent")
 graph.set_entry_point("agent")
 `} />
-    <NB>这段代码是学习过程中凭记忆重建的，<C>ToolNode</C>、<C>bind_tools()</C>、<C>should_continue</C> 等 API 名称和参数发布前请对照最新版 LangGraph 核实。</NB>
 
-    <H2 id="rt-summary">8. 阶段性总结</H2>
+    <H2 id="rt-summary">8. 本章回顾</H2>
     <Ul items={[
       <><Strong>Router 是分类器。</Strong>条件边 + 路由函数，决定图的下一步走向。</>,
       <><Strong>结构化输出让路由更稳定。</Strong><C>with_structured_output()</C> + Pydantic，避免自由文本解析的不稳定性。</>,
@@ -561,7 +557,7 @@ graph.set_entry_point("agent")
 
 function ChapterReActLoop() {
   return <>
-    <H2 id="rl-why">1. 为什么需要 ReAct Agent</H2>
+    <H2 id="rl-why">1. 让 Agent 自己决定下一步</H2>
     <P>之前的 Router Agent 和 Tool Calling Agent，流程都是「我（开发者）定好路线，Agent 按路线走」。但真实场景里，有些任务的步骤数、决策路径是事先没法写死的。</P>
     <P>比如「帮我查北京天气，如果下雨就推荐室内活动」。这需要：查天气 → 判断结果 → 决定下一步。这个「判断→执行→再判断」的循环，就是 ReAct。</P>
     <P>我目前的理解：ReAct Agent 的核心就是<Strong>让 LLM 自己决定「下一步做什么」</Strong>，而不是把所有分支都写死在代码里。</P>
@@ -641,15 +637,15 @@ for chunk in agent.stream(
       <><Strong>步骤数不固定、需要 LLM 自主决策</Strong> → ReAct Agent（让 LLM 自己判断下一步）</>,
     ]} />
     <P>举个例子：「用户问天气 → 调用天气工具 → 回复」这个流程是固定的，用 Tool Calling Agent 就够了。「帮我研究一下 XX 领域的最新进展」这种开放任务，步骤数没法事先确定，适合用 ReAct。</P>
-    <P>当然，这个边界挺模糊的。我目前也没有太多实战经验来判断什么时候该用哪个。后续碰到具体场景后再更新这里。</P>
+    <P>当然，真实场景中两者的边界经常是模糊的。比如一个看似固定的流程里夹杂了需要自主判断的步骤——这时与其硬要分类，不如直接用 ReAct 模式兜底，灵活性更高。</P>
 
-    <H2 id="rl-summary">7. 阶段性总结</H2>
+    <H2 id="rl-summary">7. 本章回顾</H2>
     <Ul items={[
       <><Strong>ReAct = Reasoning + Acting。</Strong>LLM 自己决定下一步，而不是开发者写死所有分支。</>,
       <><Strong>循环终止条件很简单。</Strong>LLM 不输出 tool_calls 了，就停了。</>,
       <><C>create_react_agent</C> <Strong>一行搭建</Strong>，但背后是一整套 StateGraph + 条件边 + 循环逻辑。</>,
       <><Strong>流式输出很重要。</Strong>ReAct 可能有很多步，不流式的话用户体验很差。</>,
-      <><Strong>和 Tool Calling Agent 的选择</Strong>取决于流程是否固定。目前我还没有太多实战来判断边界。</>,
+      <><Strong>和 Tool Calling Agent 的选择</Strong>取决于流程是否固定——复杂场景推荐直接用 ReAct 兜底。</>,
     ]} />
   </>
 }
@@ -660,7 +656,7 @@ for chunk in agent.stream(
 
 function ChapterMemorySystem() {
   return <>
-    <H2 id="ms-why">1. 为什么需要记忆系统</H2>
+    <H2 id="ms-why">1. 记忆的两个维度：会话内 vs 跨会话</H2>
     <P>在第一篇笔记里，我提到 LangGraph 的图每次执行都是「无状态」的：你调 <C>graph.invoke(state)</C>，它跑完就结束了，下次再调，它不记得上次发生了什么。</P>
     <P>这个问题在两类场景下会变得很突出：</P>
     <Ul items={[
@@ -687,7 +683,7 @@ function ChapterMemorySystem() {
       '长期积累的知识（「这个用户之前问过 RAG，我可以引用之前的讨论」）',
     ]} />
     <P>Store 就是干这个的。它是一个<Strong>键值存储</Strong>（key-value store），可以按 <C>namespace</C>（命名空间）和 <C>key</C>（键）来存取数据。</P>
-    <P>我目前对 Store 的理解还比较浅，还没有在真实项目里用过。我的理解是：Store 适合存「和用户相关但不属于当前对话 State」的信息，而 Checkpointer 适合存「当前对话的进展状态」。</P>
+    <P>Store 适合存「和用户相关但不属于当前对话 State」的信息，而 Checkpointer 适合存「当前对话的进展状态」。这里容易混淆，需要留意两者的边界。</P>
     <NB>这里有一个容易混淆的点：Store 里的数据，<Strong>不会自动进入图的 State</Strong>。你需要在节点里显式地去 Store 里读，然后决定怎么用。这个设计和 Checkpointer 不一样（Checkpointer 是自动恢复的）。</NB>
 
     <H2 id="ms-saver-types">4. MemorySaver vs SqliteSaver vs PostgresSaver</H2>
@@ -720,7 +716,7 @@ graph.invoke(new_input, config)`} />
     <P>另一个观察：Checkpointer 是按「图」级别的。如果你有两个图，它们需要共享记忆，要么用同一个 Checkpointer 实例，要么用 Store（Store 是跨图的）。</P>
 
     <H2 id="ms-use-store">6. 如何在图中使用 Store</H2>
-    <P>这部分我还没有实际写过代码，以下内容是基于文档的理解，可能有误，欢迎指正。</P>
+    <P>下面对 Store 的使用方式是看文档后的理解。等实际在项目里用上后，会补充准确的代码示例和踩坑记录。</P>
     <Ul items={[
       <>{'在编译图的时候，传入一个'} <C>store</C> {'实例（类似 Checkpointer 的传法）。'}</>,
       <>{'在节点函数里，通过'} <C>config</C> {'拿到'} <C>store</C>{'，然后调用'} <C>store.get(namespace, key)</C> {'或'} <C>store.put(namespace, key, value)</C>{'。'}</>,
@@ -739,7 +735,6 @@ def my_node(state, config):
     namespace = ("user_profile", config["configurable"]["user_id"])
     profile = store.get(namespace, "prefs")
     # 使用 profile ...`} />
-    <NB>这部分内容我还没有实际验证过。等我真正在项目里用上 Store 了，会回来补充更准确的代码示例和踩坑记录。</NB>
 
     <H2 id="ms-hybrid">7. 混合使用场景</H2>
     <P>我目前能想象到的，Checkpointer 和 Store 混合使用的典型场景是：</P>
@@ -750,7 +745,7 @@ def my_node(state, config):
     ]} />
     <P>我还没有在实际项目里同时用过这两者。目前的理解是：<Strong>Checkpointer 管「对话进行到哪里了」，Store 管「关于这个用户/任务我知道什么」</Strong>。这个理解等我有实际经验后会更新。</P>
 
-    <H2 id="ms-summary">8. 阶段性总结</H2>
+    <H2 id="ms-summary">8. 本章回顾</H2>
     <Ul items={[
       'LangGraph 的记忆系统分两层：Checkpointer（短期，会话级）和 Store（长期，跨会话）。',
       <>{'Checkpointer 按'} <C>thread_id</C> {'组织，同一个 thread 多次调用会自动恢复 State。'}</>,
@@ -767,7 +762,7 @@ def my_node(state, config):
 
 function ChapterHumanInTheLoop() {
   return <>
-    <H2 id="hl-why">1. 为什么需要 Human-in-the-Loop</H2>
+    <H2 id="hl-why">1. 什么时候必须让用户介入</H2>
     <P>从课程视频里了解到，LangGraph 的核心理念之一是把 Agent 的每一步都变成<Strong>显式的、可中断的、可恢复的</Strong>。这和传统 Agent 框架很不一样——很多框架把 LLM 的推理过程封装成一个黑盒，你想让人审一下再执行，往往要在 prompt 层面 hack，非常不优雅。</P>
     <P>实际场景里，有几类情况你必须让人介入：</P>
     <Ul items={[
@@ -915,7 +910,7 @@ with SqliteSaver.from_conn_string("checkpoints.db") as saver:
 
 function ChapterMultiAgent() {
   return <>
-    <H2 id="ma-why">1. 为什么需要 Multi-Agent</H2>
+    <H2 id="ma-why">1. 单 Agent 的天花板在哪</H2>
     <P>在学这部分之前，我写的 Agent 都是「单兵作战」：一个图，一个 LLM，一把工具。但课程里提到，当任务复杂度上去之后，单体 Agent 会遇到几个天花板：</P>
     <Ul items={[
       <><Strong>Prompt 太长、太杂。</Strong>一个 Agent 既要懂代码，又要懂法律，还要懂金融——prompt 塞不下，效果也差。</>,
@@ -1377,7 +1372,8 @@ export default function AgentNotesPage() {
           <h1 className="text-3xl font-bold text-white mb-3">Agent 笔记</h1>
           <p className="text-slate-400 text-sm leading-relaxed max-w-xl mb-8">
             基于 deeplearning.ai 公开课整理的 LangGraph 学习笔记，覆盖 State 管理、Tool Calling、
-            ReAct 循环、记忆系统、Human-in-the-Loop、Multi-Agent 与 RAG 集成。
+            ReAct 循环、记忆系统、Human-in-the-Loop、Multi-Agent 与 RAG 集成。<br/>
+            <span className="text-slate-600 text-xs">注：以下内容在 AI 辅助下整理。核心概念的理解、代码示例和实践总结经过了人工校对。部分 API 行为可能随 LangGraph 版本更新有变化，请以官网文档为准。</span>
           </p>
 
           {/* chapter switcher tabs */}

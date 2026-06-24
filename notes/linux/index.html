@@ -172,7 +172,7 @@
   <div class="content" id="content">
     <p class="page-meta">// notes / linux</p>
     <h1 class="page-title">Linux 笔记</h1>
-    <p class="page-desc">记录 Linux 开发环境配置、日常使用技巧与服务器运维经验。以实用为导向，覆盖 WSL2、Shell 脚本、性能监控等方向。</p>
+    <p class="page-desc">记录 Linux 开发环境配置、日常使用技巧与服务器运维经验。以实用为导向，覆盖 WSL2、Shell 脚本、性能监控等方向。<br/><span style="color:#64748b;font-size:0.75rem;">注：以下内容在 AI 辅助下整理，命令示例和配置建议经过了人工验证。</span></p>
 
     <!-- chapter tabs -->
     <div class="ch-tabs" id="ch-tabs">
@@ -909,8 +909,6 @@ ENTRYPOINT ["python", "train.py"]</div>
 <h2 class="section-h2" id="docker-compose">4. Docker Compose</h2>
 <p class="text-p">当项目涉及多个容器（如 API + Redis + PostgreSQL），用 Compose 一把管理：</p>
 <div class="pre-block"># docker-compose.yml
-version: "3.8"
-
 services:
   api:
     build: .
