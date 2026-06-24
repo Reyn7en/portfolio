@@ -7,7 +7,8 @@ import { useState, useEffect, useRef, useCallback } from 'react'
    Chapter metadata
    ══════════════════════════════════════════════════ */
 
-const chapters = [
+type Chapter = { id: string; label: string; title: string; desc: string; sections: { id: string; title: string }[]; pending?: boolean }
+const chapters: Chapter[] = [
   {
     id: 'langgraph',
     label: '第一章',
