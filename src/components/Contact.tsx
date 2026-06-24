@@ -2,16 +2,6 @@ const contactInfo = [
   {
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-      </svg>
-    ),
-    label: '邮箱',
-    value: 'reyn7@qq.com',
-    href: 'mailto:reyn7@qq.com',
-  },
-  {
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
@@ -47,9 +37,6 @@ export default function Contact() {
           <p className="text-slate-300 leading-relaxed mb-6">
             如果你对 AI 应用开发、智能调度、工程实践方向感兴趣，
             或有实习 / 合作机会，欢迎通过以下方式联系。
-          </p>
-          <p className="text-slate-400 text-sm mb-8">
-            一般会在 24 小时内回复邮件。
           </p>
 
           {/* Resume download */}
