@@ -5,6 +5,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import CustomCursor from '@/components/CustomCursor'
 import MouseGlow from '@/components/MouseGlow'
 import ConsoleEgg from '@/components/ConsoleEgg'
+import Particles from '@/components/Particles'
 
 /* ══════════════════════════════════════════════════
    Chapter metadata
@@ -1359,6 +1360,7 @@ export default function AgentNotesPage() {
   return (
     <div className="min-h-screen bg-slate-900 text-white">
       <ConsoleEgg />
+      <Particles />
       <CustomCursor />
       <MouseGlow />
       {/* sticky header */}
