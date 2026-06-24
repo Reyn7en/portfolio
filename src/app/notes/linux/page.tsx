@@ -7,7 +7,7 @@ import CustomCursor from '@/components/CustomCursor'
 import MouseGlow from '@/components/MouseGlow'
 import Particles from '@/components/Particles'
 
-/* ── types ───────────────────────────────── */
+// === types ===
 
 interface SectionMeta { id: string; title: string }
 interface ChapterMeta {
@@ -18,7 +18,7 @@ interface ChapterMeta {
   sections: SectionMeta[]
 }
 
-/* ── data ────────────────────────────────── */
+// === data ===
 
 const chapters: ChapterMeta[] = [
   {
@@ -92,7 +92,7 @@ const chapters: ChapterMeta[] = [
   },
 ]
 
-/* ── helper components ───────────────────── */
+// === helper components ===
 
 function H2({ id, children }: { id?: string; children: React.ReactNode }) {
   return <h2 id={id} className="text-xl font-bold text-white mt-12 mb-4 scroll-mt-28 pb-2 border-b border-slate-800">{children}</h2>
@@ -123,7 +123,7 @@ function Ul({ items }: { items: React.ReactNode[] }) {
    Chapter content renderers
    ════════════════════════════════════════════ */
 
-/* ── 第一章：WSL2 ─────────────────────────── */
+// === 第一章：WSL2 ===
 
 function ChapterWsl2() {
   return <>
@@ -240,7 +240,7 @@ echo "deb [signed-by=/etc/apt/keyrings/example.gpg] https://example.com/ stable 
   </>
 }
 
-/* ── 第二章：常用命令速查 ──────────────────── */
+// === 第二章：常用命令速查 ===
 
 function ChapterCommands() {
   return <>
@@ -344,7 +344,7 @@ ps aux | grep python | awk '{print $2}' | xargs kill`} />
   </>
 }
 
-/* ── 第三章：Shell 脚本 ───────────────────── */
+// === 第三章：Shell 脚本 ===
 
 function ChapterShell() {
   return <>
@@ -532,7 +532,7 @@ grep CRON /var/log/syslog`} />
   </>
 }
 
-/* ── 第四章：终端工具链 ───────────────────── */
+// === 第四章：终端工具链 ===
 
 function ChapterTerminal() {
   return <>
@@ -641,7 +641,7 @@ set -g default-terminal "screen-256color"`} />
   </>
 }
 
-/* ── 第五章：SSH ──────────────────────────── */
+// === 第五章：SSH ===
 
 function ChapterSsh() {
   return <>
@@ -737,7 +737,7 @@ rsync -avzP user@server:/data/ ./data/            # 同步远程到本地
   </>
 }
 
-/* ── 第六章：性能监控 ─────────────────────── */
+// === 第六章：性能监控 ===
 
 function ChapterMonitoring() {
   return <>
@@ -804,7 +804,7 @@ export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128  # 减少显存碎片`} />
   </>
 }
 
-/* ── 第七章：Docker ───────────────────────── */
+// === 第七章：Docker ===
 
 function ChapterDocker() {
   return <>
@@ -956,7 +956,7 @@ services:
   </>
 }
 
-/* ── sidebar ─────────────────────────────── */
+// === sidebar ===
 
 function Sidebar({ activeChapter, activeSection, onNav }: {
   activeChapter: string
@@ -1008,7 +1008,7 @@ function Sidebar({ activeChapter, activeSection, onNav }: {
   )
 }
 
-/* ── chapter switcher (mobile / above content) ── */
+// === chapter switcher (mobile / above content) ===
 
 function ChapterSwitcher({ activeChapter, onSwitch }: { activeChapter: string; onSwitch: (id: string) => void }) {
   return (
@@ -1032,7 +1032,7 @@ function ChapterSwitcher({ activeChapter, onSwitch }: { activeChapter: string; o
   )
 }
 
-/* ── render active chapter content ──────── */
+// === render active chapter content ===
 
 function ChapterContent({ chapterId }: { chapterId: string }) {
   switch (chapterId) {
@@ -1047,7 +1047,7 @@ function ChapterContent({ chapterId }: { chapterId: string }) {
   }
 }
 
-/* ── main page ───────────────────────────── */
+// === main page ===
 
 export default function NotesLinux() {
   const router = useRouter()
@@ -1179,7 +1179,7 @@ export default function NotesLinux() {
   )
 }
 
-/* ── prev / next button ─────────────────── */
+// === prev / next button ===
 
 function ChapterNavBtn({ chapters, currentId, direction, onClick }: {
   chapters: ChapterMeta[]
