@@ -866,7 +866,7 @@ EXPOSE 8000
 # 启动命令
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]`} />
     <H3>PyTorch 项目示例</H3>
-    <Pre code={`FROM pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
+    <Pre code={`FROM pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime  # 按需替换版本
 
 WORKDIR /workspace
 
@@ -927,9 +927,9 @@ docker compose build         # 重新构建镜像`} />
       '实验环境隔离，Python 包冲突再也跟你没关系',
     ]} />
     <P>常用基础镜像选择：</P>
-    <Pre code={`# 官方 PyTorch 镜像（推荐）
-pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime   # 只跑推理/训练
-pytorch/pytorch:2.1.0-cuda12.1-cudnn8-devel      # 需要编译 CUDA 扩展时用
+    <Pre code={`# 官方 PyTorch 镜像（推荐，按需替换版本）
+pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime  # 只跑推理/训练
+pytorch/pytorch:2.5.1-cuda12.4-cudnn9-devel    # 需要编译 CUDA 扩展时用
 
 # NVIDIA 官方 CUDA 镜像（需要自己装 PyTorch）
 nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04`} />
@@ -937,7 +937,7 @@ nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04`} />
     <Pre code={`# docker-compose.train.yml
 services:
   train:
-    image: pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
+    image: pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime  # 按需替换版本
     working_dir: /workspace
     volumes:
       - ./:/workspace          # 挂载当前目录

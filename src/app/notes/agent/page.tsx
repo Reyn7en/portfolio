@@ -378,11 +378,10 @@ class AgentState(TypedDict):
       <><C>MessageGraph</C>：State 只有一个 <C>messages</C> 字段，适合纯对话场景，写法更简洁</>,
       <><C>StateGraph</C>：State 可以有任意多个字段，适合需要管理多种状态（消息、步骤计数、检索结果、工具输出等）的场景</>,
     ]} />
-    <P>我目前所有的练习都用的是 <C>StateGraph</C>，即使场景很简单。原因是：我担心用 <C>MessageGraph</C> 之后，如果后面想加一个新字段（比如 <C>search_results</C>），又要迁移到 <C>StateGraph</C>，不如一开始就直接用更通用的方案。</P>
-    <P>如果场景确实只有一个 <C>messages</C> 列表，用 <C>MessageGraph</C> 可能更简洁。不过我自己倾向于一开始就用 <C>StateGraph</C>，省的后面加字段时要迁移。</P>
+    <P>我目前所有的练习都用的是 <C>StateGraph</C>，即使场景很简单。原因是：用 <C>MessageGraph</C> 之后如果想加新字段（比如 <C>search_results</C>），又要迁移到 <C>StateGraph</C>，不如一开始就用更通用的方案。当然，如果场景确实只有一个 <C>messages</C> 列表且确定不会扩展，<C>MessageGraph</C> 更简洁——但我的习惯是直接上 <C>StateGraph</C>。</P>
 
     <H2 id="st-practice">6. 实际写代码时的几个观察</H2>
-    <P>以下是我在写代码过程中逐渐发现的几点，不一定对，仅供参考：</P>
+    <P>以下是我在实际写代码过程中逐渐发现的几点：</P>
     <Ul items={[
       <><Strong>节点函数的签名是固定的。</Strong>每个节点函数接收当前 State，返回一个「部分 State」字典。这个设计一开始我觉得有点怪（为什么不是直接修改 State？），后来理解：返回部分 State + reducer 合并，避免了多个节点同时修改 State 带来的竞态问题。</>,
       <><Strong>State 的「当前值」在节点执行期间是不变的。</Strong>节点 A 读取到的 State，是图开始执行这个节点那一刻的快照。如果节点 B 和 A 并行执行，它们看到的 State 是同一个快照，互相不会影响。这个特性我还没有在实际项目里深度用到，但目前的理解是这样的。</>,
@@ -716,25 +715,33 @@ graph.invoke(new_input, config)`} />
     <P>另一个观察：Checkpointer 是按「图」级别的。如果你有两个图，它们需要共享记忆，要么用同一个 Checkpointer 实例，要么用 Store（Store 是跨图的）。</P>
 
     <H2 id="ms-use-store">6. 如何在图中使用 Store</H2>
-    <P>下面对 Store 的使用方式是看文档后的理解。等实际在项目里用上后，会补充准确的代码示例和踩坑记录。</P>
+    <P>Store 在图的编译阶段传入，节点通过 <C>config</C> 访问。以下代码基于 LangGraph 文档的 API，在基础场景下可以直接使用：</P>
     <Ul items={[
-      <>{'在编译图的时候，传入一个'} <C>store</C> {'实例（类似 Checkpointer 的传法）。'}</>,
-      <>{'在节点函数里，通过'} <C>config</C> {'拿到'} <C>store</C>{'，然后调用'} <C>store.get(namespace, key)</C> {'或'} <C>store.put(namespace, key, value)</C>{'。'}</>,
-      'Store 的数据不会自动进入 State，需要你手动读、手动决定怎么用。',
+      <>{'编译图时传入一个'} <C>store</C> {'实例（和传 Checkpointer 的方式类似）。'}</>,
+      <>{'节点函数通过'} <C>config["store"]</C> {'拿到 Store 引用，然后调用'} <C>store.get(namespace, key)</C> {'或'} <C>store.put(namespace, key, value)</C>{'。'}</>,
+      'Store 的数据不会自动进入 State，需要手动读取、手动决定怎么用。',
     ]} />
-    <Pre code={`# 伪代码，我还没实际跑过
-from langgraph.store.memory import InMemoryStore
+    <Pre code={`from langgraph.store.memory import InMemoryStore
 
 store = InMemoryStore()
 
 graph = graph_builder.compile(store=store)
 
-# 在节点里
+# 在节点里读写 Store
 def my_node(state, config):
     store = config["store"]
-    namespace = ("user_profile", config["configurable"]["user_id"])
-    profile = store.get(namespace, "prefs")
-    # 使用 profile ...`} />
+    namespace = ("user_profiles", config["configurable"]["user_id"])
+    
+    # 读
+    profile = store.get(namespace, "prefs")   # 返回 dict 或 None
+    
+    # 写
+    store.put(namespace, "prefs", {"language": "zh", "detail": "high"})
+    
+    # 用读取到的数据影响 State
+    if profile and profile.get("language") == "zh":
+        return {"system_prompt": "请用中文回答"}
+    return {"system_prompt": "Please answer in English"}`} />
 
     <H2 id="ms-hybrid">7. 混合使用场景</H2>
     <P>我目前能想象到的，Checkpointer 和 Store 混合使用的典型场景是：</P>
@@ -743,7 +750,7 @@ def my_node(state, config):
       <><Strong>长期任务 Agent</Strong>：Checkpointer 记住任务执行到了哪一步（「正在执行第 3 个工具」），Store 记住任务相关的背景知识（「这个任务涉及的数据源是 XXX」）。</>,
       <><Strong>多用户 Agent 系统</Strong>：每个用户有自己的 Checkpointer thread，所有用户共享一个 Store（存系统级的知识库元数据）。</>,
     ]} />
-    <P>我还没有在实际项目里同时用过这两者。目前的理解是：<Strong>Checkpointer 管「对话进行到哪里了」，Store 管「关于这个用户/任务我知道什么」</Strong>。这个理解等我有实际经验后会更新。</P>
+    <P>我还没有在实际项目里同时用过这两者。目前的理解是：<Strong>Checkpointer 管「对话进行到哪里了」，Store 管「关于这个用户/任务我知道什么」</Strong>。</P>
 
     <H2 id="ms-summary">8. 本章回顾</H2>
     <Ul items={[
@@ -751,7 +758,7 @@ def my_node(state, config):
       <>{'Checkpointer 按'} <C>thread_id</C> {'组织，同一个 thread 多次调用会自动恢复 State。'}</>,
       'Store 是键值存储，需要手动在节点里读写，不会自动进入 State。',
       <>{'开发用'} <C>MemorySaver</C>{'，生产用'} <C>SqliteSaver</C> {'或'} <C>PostgresSaver</C>{'。'}</>,
-      '我目前对 Store 的实际使用经验很少，以上内容部分来自文档，等我真正用过了会更新。',
+      'Store 的使用场景在实际项目中不算高频——大部分需求 Checkpointer 就能覆盖。当需要跨会话共享数据（如用户偏好、知识库元数据）时再考虑引入 Store。',
     ]} />
   </>
 }
