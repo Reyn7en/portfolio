@@ -26,12 +26,11 @@ export default function TiltCard({ children, className = '', max = 8 }: TiltCard
     const y = e.clientY - rect.top
     const cx = rect.width / 2
     const cy = rect.height / 2
-    // 归一化到 -1 ~ 1
-    const rx = (y - cy) / cy // Y 轴旋转：鼠标在上 → 正仰角
-    const ry = (cx - x) / cx // X 轴旋转：鼠标在左 → 正转角
+    const rx = (y - cy) / cy
+    const ry = (cx - x) / cx
+    // 只更新旋转，perspective 已在 style 中设置
     el.style.transform = `perspective(800px) rotateX(${rx * max}deg) rotateY(${ry * max}deg)`
 
-    // 光泽高光
     if (glareRef.current) {
       glareRef.current.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.08), transparent 50%)`
       glareRef.current.style.opacity = '1'
@@ -50,7 +49,12 @@ export default function TiltCard({ children, className = '', max = 8 }: TiltCard
       className={`tilt-card ${className}`}
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}
-      style={{ transformStyle: 'preserve-3d', transition: 'transform 0.15s ease-out' }}
+      style={{
+        transformStyle: 'preserve-3d',
+        transition: 'transform 0.15s ease-out',
+        // perspective 作为 CSS 属性设置，避免每次 transform 重复写入
+        perspective: '800px',
+      }}
     >
       {children}
       <div

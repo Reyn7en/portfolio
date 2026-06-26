@@ -56,13 +56,10 @@ export default function Hero() {
           <span className="text-blue-300 font-medium">强化学习（DRL）</span>
           与{' '}
           <span className="text-blue-300 font-medium">智能调度优化</span>。
+          <br className="hidden md:block" />
           同时在自学{' '}
-          <span className="text-blue-300 font-medium">LLM Agent</span> /{' '}
-          <span className="text-blue-300 font-medium">RAG</span>{' '}
+          <span className="text-blue-300 font-medium">LLM Agent</span>{' '}
           应用开发，业余还在摸索游戏引擎。
-          <br className="hidden md:block" />
-          <br className="hidden md:block" />
-          正在构建可交互的 AI 应用与工程化工具链。
         </p>
 
         <div className="flex flex-wrap gap-4 hero-cta">

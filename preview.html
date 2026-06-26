@@ -527,9 +527,8 @@
       </h1>
       <p class="hero-sub">
         电子信息方向在读硕士，研究主方向为
-        <span class="accent">强化学习（DRL）</span>与<span class="accent">智能调度优化</span>。
-        同时在自学 <span class="accent">LLM Agent</span> / <span class="accent">RAG</span> 应用开发，业余还在摸索游戏引擎。<br><br>
-        正在构建可交互的 AI 应用与工程化工具链。
+        <span class="accent">强化学习（DRL）</span>与<span class="accent">智能调度优化</span>。<br>
+        同时在自学 <span class="accent">LLM Agent</span> 应用开发，业余还在摸索游戏引擎。
       </p>
       <div class="hero-cta">
         <a class="btn-primary" href="#work" data-magnetic>查看项目方向 →</a>
@@ -1077,6 +1076,41 @@
     }
     raf = requestAnimationFrame(loop);
   })();
+
+  // ── Tilt effect for .note-card (matches React TiltCard) ──
+  document.querySelectorAll('.note-card').forEach(el => {
+    el.style.position = 'relative';
+    el.style.transition = 'transform 0.15s ease-out';
+
+    const glare = document.createElement('div');
+    glare.style.position = 'absolute';
+    glare.style.inset = '0';
+    glare.style.borderRadius = 'inherit';
+    glare.style.pointerEvents = 'none';
+    glare.style.opacity = '0';
+    glare.style.transition = 'opacity 0.3s';
+    glare.style.zIndex = '1';
+    el.appendChild(glare);
+
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+      const max = 6;
+      const rx = (y - cy) / cy;
+      const ry = (cx - x) / cx;
+      el.style.transform = `perspective(800px) rotateX(${rx * max}deg) rotateY(${ry * max}deg)`;
+      glare.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.08), transparent 50%)`;
+      glare.style.opacity = '1';
+    });
+
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg)';
+      glare.style.opacity = '0';
+    });
+  });
 </script>
 </body>
 </html>
